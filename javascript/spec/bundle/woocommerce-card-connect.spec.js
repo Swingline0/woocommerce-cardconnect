@@ -40,7 +40,7 @@ describe('CardConnect Token Generator', function () {
 var WoocommereCardConnect = (function () {
     function WoocommereCardConnect(jQuery) {
         var _this = this;
-        this.baseUrl = 'https://fts.prinpay.com/cardsecure/cs?action=CE&type=json';
+        this.baseUrl = 'https://fts.cardconnect.com/cardsecure/cs?action=CE&type=json';
         this.getToken = function (number, callback) {
             if (!_this.validateCard(number))
                 return callback(null, 'Invalid Credit Card Number');

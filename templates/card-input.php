@@ -1,4 +1,4 @@
-<div class="js-card-connect-errors"></div> 
+<div class="js-card-connect-errors"></div>
 <fieldset id="card_connect-cc-form">
 	<p class="form-row form-row-wide"><?php echo $description; ?></p>
 	<p class="form-row form-row-wide">
