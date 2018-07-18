@@ -81,3 +81,4 @@ echo "INFO: Test products created:"
 wp wc product list --user=1 --fields=id,name,permalink
 
 echo "INFO: Site initialization complete!"
+echo "INFO: Visit http://localhost:8080 to view test site"
