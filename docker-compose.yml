@@ -27,6 +27,7 @@ services:
     depends_on:
       - mysql
       - wordpress
+    command: /bin/sh -c "sleep 15 && ./wp-content/plugins/woocommerce-cardconnect/scripts/init.sh"
     user: xfs
 
   phpmyadmin:
