@@ -87,6 +87,8 @@ Cypress Resources:
 * Phpmyadmin is mapped to port 9090 if needed, credentials are:
   * Username: root
   * Password: TEST
+* To reset the test site while it's running, run `npm run init`. This
+will perform the same process as when the application is started.
 * WP-CLI commands may be run using the following format:
   * `npm run wp -- <<command here>>`  
     e.g. `npm run wp -- option get home`
