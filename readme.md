@@ -51,6 +51,36 @@ To get started, follow the steps below:
 To stop the application, press `Ctrl-c` or run `docker-compose stop` from a separate
 shell.
 
+### Testing
+
+This application uses the [Cypress](https://www.cypress.io/) platform to run end-to-end
+tests and validate functionality. In order to run tests locally:
+
+1. Ensure that the application stack is running (Site is accessible at http://localhost:8080)
+1. Run `npm test`
+
+Tests will run in a headless instance of Chrome and the results will be returned in the
+terminal. If tests fail, the return will report as such and export screenshots and a video
+of the failure in the following locations:
+
+* `cypress/screenshots/`
+* `cypress/videos/`
+
+This feature should be used frequently during development to ensure no regressions are
+inadvertently introduced.
+
+#### Maintaining Tests
+
+Integration tests can be found in `cypress/integration`, every file in this directory
+will be evaluated during testing. If you wish to debug existing tests or begin creating
+your own, run `npm run test:open`. This will launch a separate window in which you can
+visually step through each test.
+
+Cypress Resources:
+
+* [Writing your first test](https://docs.cypress.io/guides/getting-started/writing-your-first-test.html#)
+* [API documentation](https://docs.cypress.io/api/introduction/api.html#)
+
 ### Developer Notes
 
 * Apache will attempt to map to port 8080 on the host system

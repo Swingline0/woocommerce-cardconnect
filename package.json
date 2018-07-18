@@ -7,7 +7,8 @@
     "node": "10"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "cypress run",
+    "test:open": "cypress open",
     "wp": "docker-compose run --rm wp-cli wp",
     "init": "docker-compose run --rm wp-cli /bin/sh wp-content/plugins/woocommerce-cardconnect/scripts/init.sh"
   },
