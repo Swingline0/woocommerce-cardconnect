@@ -33,9 +33,9 @@ jQuery(($: JQueryStatic) => {
     function getToken() : boolean {
 
         // If the form is already tokenized and ready to submit
-        // if (checkAllowSubmit()) {
-        //    return;
-        // }
+        if (checkAllowSubmit()) {
+           return;
+        }
 
         const $ccInput = $form.find('#card_connect-card-number');
         const creditCard = String($ccInput.val());
