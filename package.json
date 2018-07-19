@@ -11,12 +11,12 @@
     "test": "cypress run",
     "test:open": "cypress open",
     "wp": "docker-compose run --rm wp-cli wp",
-    "init": "docker-compose run --rm wp-cli /bin/sh wp-content/plugins/woocommerce-cardconnect/scripts/init.sh"
+    "init": "docker-compose run --rm wp-cli /bin/sh wp-content/plugins/woocommerce-cardconnect/scripts/init.sh",
+    "watch": "gulp js:watch"
   },
   "author": "Swingline0",
   "license": "GPL",
   "devDependencies": {
-    "@types/jquery": "^3.3.4",
     "browserify": "^16.2.2",
     "chai": "^2.2.0",
     "cypress": "^3.0.2",
@@ -25,11 +25,13 @@
     "gulp-if": "^1.2.5",
     "gulp-notify": "^2.2.0",
     "gulp-plumber": "^1.2.0",
+    "gulp-sourcemaps": "^2.6.4",
     "gulp-typescript": "^5.0.0-alpha.3",
-    "gulp-uglify": "^1.2.0",
+    "gulp-uglify": "^1.5.4",
     "mocha": "^2.2.1",
     "tsify": "^4.0.0",
     "typescript": "^2.9.2",
+    "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
     "watchify": "^3.11.0"
   }

@@ -5,59 +5,38 @@ const source = require('vinyl-source-stream');
 const browserify = require('browserify');
 const watchify = require('watchify');
 const tsify = require('tsify');
-const uglify = require('gulp-uglify');
 const gulpif = require('gulp-if');
+const uglify = require('gulp-uglify');
+const sourcemaps = require('gulp-sourcemaps');
+const buffer = require('vinyl-buffer');
 
 /*
  * Browserify/watchify bundler stuff
  */
-const jsConfig = {
-  publicPath : __dirname + '/javascript/dist',
-  source: {
-    path: __dirname + '/javascript/src',
-    main: 'woocommerce-cc-gateway.ts',
-    result: 'woocommerce-cc-gateway.js'
-  }
-};
 
-gulp.task('default', ['compile-js']);
+gulp.task('default', ['js:build']);
 
-gulp.task('compile-js', function (){
-  let bundler = browserify(
-    {
-      basedir: jsConfig.source.path,
-      cache: {},
-      packageCache: {}
-    })
-    .add(jsConfig.source.path + '/' + jsConfig.source.main)
-    .plugin(tsify);
+function compileTypescript() {
+  return browserify({
+    basedir: '.',
+    debug: true,
+    entries: ['javascript/src/woocommerce-cc-gateway.ts'],
+    cache: {},
+    packageCache: {}
+  })
+    .plugin(tsify)
+    .bundle()
+    .on('error', console.error)
+    .pipe(source('woocommerce-cc-gateway.js'))
+    .pipe(buffer())
+    .pipe(sourcemaps.init({loadMaps: true}))
+    .pipe(uglify().on('error', console.error))
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest('javascript/dist'));
+}
 
-  bundler = watchify(bundler);
-
-  const bundle = function(bundler){
-    bundler.bundle()
-      .on('error', notify.onError({
-        message: 'Error: <%= error.toString() %>',
-        title: 'Compile Error',
-        sound: true,
-        icon: ''
-      }))
-      .on('error', function(error){
-        this.emit('end');
-      })
-      .pipe(plumber({errorHandler: notify.onError("Error: <%= error.message %>")}))
-      .pipe(source(jsConfig.source.result))
-      .pipe(gulp.dest(jsConfig.publicPath))
-      .pipe(notify('Bundle re-bundled.'));
-  };
-
-  bundler.on('update', function(){
-    bundle(bundler);
-  });
-
-  bundle(bundler);
-});
-
+gulp.task('js:build', compileTypescript);
+gulp.task('js:watch', ['js:build'], () => gulp.watch('**/*.ts', ['js:build']));
 
 /*
  * Build plugin
