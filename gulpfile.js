@@ -1,17 +1,17 @@
-var gulp = require('gulp');
-var notify = require('gulp-notify');
-var plumber = require('gulp-plumber');
+const gulp = require('gulp');
+const notify = require('gulp-notify');
+const plumber = require('gulp-plumber');
+const source = require('vinyl-source-stream');
+const browserify = require('browserify');
+const watchify = require('watchify');
+const tsify = require('tsify');
+const uglify = require('gulp-uglify');
+const gulpif = require('gulp-if');
 
 /*
  * Browserify/watchify bundler stuff
  */
-
-var source = require('vinyl-source-stream');
-var browserify = require('browserify');
-var watchify = require('watchify');
-var tsify = require('tsify');
-
-var jsConfig = {
+const jsConfig = {
   publicPath : __dirname + '/javascript/dist',
   source: {
     path: __dirname + '/javascript/src',
@@ -23,7 +23,7 @@ var jsConfig = {
 gulp.task('default', ['compile-js']);
 
 gulp.task('compile-js', function (){
-  var bundler = browserify(
+  let bundler = browserify(
     {
       basedir: jsConfig.source.path,
       cache: {},
@@ -34,7 +34,7 @@ gulp.task('compile-js', function (){
 
   bundler = watchify(bundler);
 
-  var bundle = function(bundler){
+  const bundle = function(bundler){
     bundler.bundle()
       .on('error', notify.onError({
         message: 'Error: <%= error.toString() %>',
@@ -62,13 +62,8 @@ gulp.task('compile-js', function (){
 /*
  * Build plugin
  */
-
-var gulpIgnore = require('gulp-ignore');
-var uglify = require('gulp-uglify');
-var gulpif = require('gulp-if');
-
-var excludeChecker = function(file){
-  var excludeGlobs = [
+const excludeChecker = function(file){
+  const excludeGlobs = [
     '.git',
     './dist',
     '.gitignore',
@@ -81,12 +76,12 @@ var excludeChecker = function(file){
     './javascript/src',
     './javascript/.DS_Store',
     './javascript/tests.html',
-    './javascript/tsconfig.json'
+    './tsconfig.json'
   ];
   console.log(file.name());
   return false;
   // if(excludeGlobs.indexOf(file) !== -1)
-}
+};
 
 gulp.task('build', function() {
   gulp.src('./**/*')

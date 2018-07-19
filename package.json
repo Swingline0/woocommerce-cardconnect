@@ -7,6 +7,7 @@
     "node": "10"
   },
   "scripts": {
+    "build": "gulp",
     "test": "cypress run",
     "test:open": "cypress open",
     "wp": "docker-compose run --rm wp-cli wp",
@@ -15,19 +16,21 @@
   "author": "Swingline0",
   "license": "GPL",
   "devDependencies": {
-    "browserify": "^9.0.7",
+    "@types/jquery": "^3.3.4",
+    "browserify": "^16.2.2",
     "chai": "^2.2.0",
     "cypress": "^3.0.2",
-    "gulp": "^3.8.11",
+    "gulp": "^3.9.1",
+    "gulp-cli": "^2.0.1",
     "gulp-if": "^1.2.5",
-    "gulp-ignore": "^1.2.1",
     "gulp-notify": "^2.2.0",
-    "gulp-plumber": "^1.0.0",
+    "gulp-plumber": "^1.2.0",
+    "gulp-typescript": "^5.0.0-alpha.3",
     "gulp-uglify": "^1.2.0",
     "mocha": "^2.2.1",
-    "tsify": "dpogue/tsify#ts1.5-alpha",
-    "typescript": "^1.5.0-alpha",
-    "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.1.0"
+    "tsify": "^4.0.0",
+    "typescript": "^2.9.2",
+    "vinyl-source-stream": "^2.0.0",
+    "watchify": "^3.11.0"
   }
 }

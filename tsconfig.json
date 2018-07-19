@@ -1,0 +1,12 @@
+{
+  "files": [
+    "javascript/src/main.ts"
+  ],
+  "compilerOptions": {
+    "outFile": "woocommerce-cc-gateway.js",
+    "module": "amd",
+    "noImplicitAny": true,
+    "target": "es5",
+    "sourceMap": true
+  }
+}
