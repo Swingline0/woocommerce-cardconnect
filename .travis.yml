@@ -1,0 +1,14 @@
+sudo: required
+language: node_js
+node_js:
+  - 10
+
+services:
+  - docker
+
+script:
+  - docker-compose up -d
+  - npm build
+  - sleep 10
+  - cypress run --record --key $CYPRESS_KEY
+  - npm test
