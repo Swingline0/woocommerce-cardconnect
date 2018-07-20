@@ -1,4 +1,5 @@
 import { Promise } from 'bluebird';
+import { debounce } from 'lodash';
 
 import CardConnectTokenizer from "./card-connect-tokenizer";
 import SavedCards from './saved-cards';
@@ -120,17 +121,17 @@ jQuery(($: JQueryGlobal) => {
         $form.unblock();
     }
 
+    // Will wait to fire until 500ms of no additional calls
+    const getTokenDebounced = debounce(getToken, 500);
     // Get token when focus of CC field is lost
     $form.on('blur', '#card_connect-card-number', () => {
         if($errors) $errors.html('');
-        getToken();
+        getTokenDebounced();
     });
 
     // Bind Submit Listeners
     let isTokenizationInProgress = false;
     $form.on('checkout_place_order_card_connect', (event : Event) => {
-        event.preventDefault();
-        event.stopPropagation();
         if (checkAllowSubmit()) {
             // Submit form if it's already tokenized
             return true;
@@ -138,6 +139,8 @@ jQuery(($: JQueryGlobal) => {
         if (isTokenizationInProgress) {
             return false;
         }
+        event.preventDefault();
+        event.stopPropagation();
         isTokenizationInProgress = true;
         getToken()
             .then(() => {
