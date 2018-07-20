@@ -64,4 +64,13 @@ describe('Basic Purchase', () => {
     cy.get('#place_order').click({ force: true });
     cy.get('.woocommerce-error > li').contains('Please enter a credit card number');
   });
+
+  it('Tokenizes credit card on submit if it hadn\'t been before', () => {
+    cy.get('#card_connect-card-number')
+      .type('{selectall}{del}4242424242424242');
+    cy.wait(3000);
+    cy.get('.card-connect-token').should('have.length', 0);
+    cy.get('#place_order').click({ force: true });
+    cy.get('.woocommerce-notice').contains('Thank you. Your order has been received.');
+  });
 });
