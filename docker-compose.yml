@@ -30,6 +30,16 @@ services:
     command: /bin/sh -c "sleep 15 && ./wp-content/plugins/woocommerce-cardconnect/scripts/init.sh"
     user: xfs
 
+  composer:
+    image: composer:1
+    volumes:
+      - wp_data:/var/www/html
+      - .:/var/www/html/wp-content/plugins/woocommerce-cardconnect
+    working_dir: /var/www/html/wp-content/plugins/woocommerce-cardconnect
+    command: install
+    depends_on:
+      - wordpress
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     depends_on:

@@ -1,0 +1,15 @@
+{
+  "name": "sof/woocommerce-cardconnect",
+  "description": "Cardconnect payment gateway integration with woocommerce",
+  "type": "project",
+  "require": {
+    "sentry/sentry": "^1.9"
+  },
+  "license": "GPL",
+  "authors": [
+    {
+      "name": "Eran Schoellhorn",
+      "email": "me@eran.sh"
+    }
+  ]
+}
