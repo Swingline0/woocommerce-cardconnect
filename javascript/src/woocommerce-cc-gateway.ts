@@ -32,11 +32,6 @@ jQuery(($: JQueryGlobal) => {
         $form.on('ready', SavedCards.init);
     }
 
-    // Simulate some text entry to get jQuery Payment to reformat numbers
-    // if(!wooCardConnect.isLive){
-    //     $body.on('updated_checkout', getToken);
-    // }
-
     function getToken() : Promise<undefined> {
         return new Promise((resolve : Function, reject : Function) => {
             // If the form is already tokenized and ready to submit
