@@ -123,11 +123,32 @@ jQuery(($: JQueryGlobal) => {
     // Get token when focus of CC field is lost
     $form.on('blur', '#card_connect-card-number', () => {
         if($errors) $errors.html('');
-        return getToken();
+        getToken();
     });
 
     // Bind Submit Listeners
-    $form.on('checkout_place_order_card_connect', () => checkAllowSubmit());
+    let isTokenizationInProgress = false;
+    $form.on('checkout_place_order_card_connect', (event : Event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (checkAllowSubmit()) {
+            // Submit form if it's already tokenized
+            return true;
+        }
+        if (isTokenizationInProgress) {
+            return false;
+        }
+        isTokenizationInProgress = true;
+        getToken()
+            .then(() => {
+                $(event.target).submit();
+            })
+            .catch((err) => {
+                console.error(err, 'Tokenization failed, can\'t submit form.');
+                isTokenizationInProgress = false;
+            });
+        return false;
+    });
     $('form#order_review').on('submit', () => checkAllowSubmit());
 
     // Remove token on checkout err
