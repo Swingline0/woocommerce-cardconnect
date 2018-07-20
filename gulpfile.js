@@ -27,7 +27,7 @@ function compileTypescript() {
     .plugin(tsify)
     .bundle()
     .on('error', console.error)
-    .pipe(source('woocommerce-cc-gateway.js'))
+    .pipe(source('cardconnect.js'))
     .pipe(buffer())
     .pipe(sourcemaps.init({loadMaps: true}))
     .pipe(uglify().on('error', console.error))

@@ -1228,7 +1228,7 @@
 		 * Register Frontend Assets
 		 **/
 		public function register_scripts() {
-			wp_register_script( 'woocommerce-cardconnect', WC_CARDCONNECT_PLUGIN_URL . '/javascript/dist/woocommerce-cc-gateway.js', array('jquery'), WC_CARDCONNECT_VER, true );
+			wp_register_script( 'woocommerce-cardconnect', WC_CARDCONNECT_PLUGIN_URL . '/javascript/dist/cardconnect.js', array('jquery'), WC_CARDCONNECT_VER, true );
 			wp_register_style( 'woocommerce-cardconnect-paymentform', WC_CARDCONNECT_PLUGIN_URL . '/stylesheets/woocommerce-cc-gateway.css', NULL, WC_CARDCONNECT_VER );
 		}
 
