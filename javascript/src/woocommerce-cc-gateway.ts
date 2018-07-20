@@ -1,3 +1,5 @@
+import { Promise } from 'bluebird';
+
 import CardConnectTokenizer from "./card-connect-tokenizer";
 import SavedCards from './saved-cards';
 
@@ -30,63 +32,64 @@ jQuery(($: JQueryGlobal) => {
     }
 
     // Simulate some text entry to get jQuery Payment to reformat numbers
-    if(!wooCardConnect.isLive){
-        $body.on('updated_checkout', getToken);
-    }
+    // if(!wooCardConnect.isLive){
+    //     $body.on('updated_checkout', getToken);
+    // }
 
-    function getToken() : boolean {
-
-        // If the form is already tokenized and ready to submit
-        if (checkAllowSubmit()) {
-           return;
-        }
-
-        const $ccInput = $form.find('#card_connect-card-number');
-        const creditCard = String($ccInput.val());
-
-        if(creditCard.indexOf('\u2022') > -1) {
-            // CC input field contains a masked card number suggesting it's already been processed
-            return;
-        }
-
-        $form.block({
-            message: null,
-            overlayCSS: {
-                background: '#fff',
-                opacity: 0.6
+    function getToken() : Promise<undefined> {
+        return new Promise((resolve : Function, reject : Function) => {
+            // If the form is already tokenized and ready to submit
+            if (checkAllowSubmit()) {
+                return resolve();
             }
-        });
-        if(!creditCard){
-            printWooError('Please enter a credit card number');
-            return false;
-        }else if(!checkCardType(creditCard)){
-            printWooError('Credit card type not accepted');
-            return false;
-        }
-        cc.getToken(creditCard, function(token : string, error : string){
-            if(error){
-                printWooError(error);
-                return false;
-            }
-            // Append token as hidden input
-            $('<input />')
-                .attr('name', 'card_connect_token')
-                .attr('type', 'hidden')
-                .addClass('card-connect-token')
-                .val(token)
-                .appendTo($form);
 
-            // Mask user entered CC number
-            $ccInput.val($.map(creditCard.split(''), (char, index) => {
-                if(creditCard.length - (index + 1) > 4 ){
-                    return char !== ' ' ? '\u2022' : ' ';
-                }else{
-                    return char;
+            const $ccInput = $form.find('#card_connect-card-number');
+            const creditCard = String($ccInput.val());
+
+            if(creditCard.indexOf('\u2022') > -1) {
+                // CC input field contains a masked card number suggesting it's already been processed
+                return resolve();
+            }
+
+            $form.block({
+                message: null,
+                overlayCSS: {
+                    background: '#fff',
+                    opacity: 0.6
                 }
-            }).join(''));
-            $form.unblock();
+            });
+            if (!creditCard){
+                printWooError('Please enter a credit card number');
+                return reject();
+            } else if (!checkCardType(creditCard)){
+                printWooError('Credit card type not accepted');
+                return reject();
+            }
+            cc.getToken(creditCard, function(token : string, error : string){
+                if (error){
+                    printWooError(error);
+                    return reject();
+                }
+                // Append token as hidden input
+                $('<input />')
+                    .attr('name', 'card_connect_token')
+                    .attr('type', 'hidden')
+                    .addClass('card-connect-token')
+                    .val(token)
+                    .appendTo($form);
+
+                // Mask user entered CC number
+                $ccInput.val($.map(creditCard.split(''), (char, index) => {
+                    if (creditCard.length - (index + 1) > 4 ){
+                        return char !== ' ' ? '\u2022' : ' ';
+                    } else {
+                        return char;
+                    }
+                }).join(''));
+                $form.unblock();
+                return resolve();
+            });
         });
-        return true;
     }
 
     function checkAllowSubmit() : boolean {
