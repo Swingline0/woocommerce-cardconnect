@@ -1,6 +1,10 @@
 import CardConnectTokenizer from "./card-connect-tokenizer";
 import SavedCards from './saved-cards';
 
+interface JQueryGlobal extends JQueryStatic {
+    payment: any;
+}
+
 // Global config object provided via wp_localize_script
 interface WoocommerceCardConnectSettings {
     isLive: boolean;
@@ -14,9 +18,9 @@ declare const wooCardConnect : WoocommerceCardConnectSettings;
 
 const SAVED_CARDS_SELECT = '#card_connect-cards';
 
-jQuery(($: JQueryStatic) => {
+jQuery(($: JQueryGlobal) => {
     const cc = new CardConnectTokenizer($, wooCardConnect.apiEndpoint);
-    const $form = $('form.checkout, form#order_review');
+    const $form : any =  $('form.checkout, form#order_review');
     const $body = $('body');
     let $errors : JQuery<HTMLElement>;
 

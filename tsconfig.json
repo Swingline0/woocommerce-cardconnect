@@ -1,4 +1,7 @@
 {
+  "files": [
+    "javascript/src/**/*.ts"
+  ],
   "compilerOptions": {
     "skipLibCheck": true,
     "noImplicitAny": true,

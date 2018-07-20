@@ -1,7 +1,7 @@
 declare let require : any;
 declare let describe : any;
 declare let it : any;
-import WoocommereCardConnect from "../src/woocommerce-card-connect";
+import WoocommereCardConnect from "../src/card-connect-tokenizer";
 
 let chai = require("chai");
 let expect = chai.expect;
@@ -10,7 +10,7 @@ let cc = new WoocommereCardConnect($);
 
 describe('CardConnect Token Generator', () => {
 
-  it("should generate token with valid credit card number", (done) => {
+  it("should generate token with valid credit card number", (done : Function) => {
     cc.getToken('4242424242424242', (token, error) => {
       expect(error).to.be.null;
       expect(token).to.be.a('string');
@@ -19,7 +19,7 @@ describe('CardConnect Token Generator', () => {
     });
   });
 
-  it("should generate error with non-numerical entry", (done) => {
+  it("should generate error with non-numerical entry", (done : Function) => {
     cc.getToken('frisbee', (token, error) => {
       expect(token).to.be.null;
       expect(error).to.equal('0008::Data not decimal digits');
@@ -27,7 +27,7 @@ describe('CardConnect Token Generator', () => {
     });
   });
 
-  it("should generate error with oversized entry", (done) => {
+  it("should generate error with oversized entry", (done : Function) => {
     cc.getToken('42424242424242424242424242424242', (token, error) => {
       expect(token).to.be.null;
       expect(error).to.equal('0013::Data too long');
@@ -35,7 +35,7 @@ describe('CardConnect Token Generator', () => {
     });
   });
 
-  it("should generate error when no entry made", (done) => {
+  it("should generate error when no entry made", (done : Function) => {
     cc.getToken('', (token, error) => {
       expect(token).to.be.null;
       expect(error).to.equal('Invalid Credit Card Number');
