@@ -84,9 +84,8 @@ jQuery(($: JQueryGlobal) => {
                     return char;
                 }
             }).join(''));
-
+            $form.unblock();
         });
-        $form.unblock();
         return true;
     }
 
