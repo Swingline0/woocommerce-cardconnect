@@ -46,8 +46,21 @@ function CardConnectPaymentGateway_init(){
 		return;
 	}
 
-	// Include Classes
-	include_once 'classes/class-wc-gateway-cardconnect.php';
+	// Include Composer dependencies
+    include_once 'vendor/autoload.php';
+    global $cardconnect_raven;
+    try {
+        // Raven is Sentry.io's Logging and Tracing utility
+        // We don't want to capture all server errors, so will just use an action hook to pass exceptions to it.
+        Raven_Autoloader::register();
+        $cardconnect_raven = new Raven_Client('https://441f18f1f5c84f0ea52c5142fa154bb8@sentry.io/1246888');
+    } catch (Exception $exception) {
+        // Failed to register logging utility
+        $cardconnect_raven = false;
+    }
+
+    // Include Classes
+    include_once 'classes/class-wc-gateway-cardconnect.php';
 	include_once 'classes/class-wc-gateway-cardconnect-saved-cards.php';
 
 	// Include Class for WooCommerce Subscriptions extension

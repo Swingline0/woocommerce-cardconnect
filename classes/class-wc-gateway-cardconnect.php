@@ -564,6 +564,16 @@
 		public function handleAuthorizationResponse_NoResponse( $order, $showNotices = false ) {
 			$order->add_order_note( sprintf( __( 'CardConnect failed transaction. Response: %s', 'woocommerce' ), 'CURL error?' ) );
 
+      global $cardconnect_raven;
+      if ($cardconnect_raven) {
+          $cardconnect_raven->captureMessage('No response from CardConnect', array(), array(
+            'extra' =>  array(
+                'site' => site_url(),
+                'mid' => $this->api_credentials['mid'],
+            )
+          ));
+      }
+
 			if ( $showNotices ) {
 				wc_add_notice( __( 'Payment error: ', 'woothemes' ) . 'A critical server error prevented this transaction from completing. Please confirm your information and try again.', 'error' );
 			}
@@ -954,8 +964,19 @@
 
 			if ( !is_null( $this->get_cc_client() ) ) {
 
-
-				$payment_response = $this->get_cc_client()->authorizeTransaction( $request );
+        try {
+				  $payment_response = $this->get_cc_client()->authorizeTransaction( $request );
+        } catch (Exception $exception) {
+          global $cardconnect_raven;
+          if ($cardconnect_raven) {
+              $cardconnect_raven->captureException($exception, array(
+                'extra' => array(
+                    'site' => site_url(),
+                    'mid' => $this->api_credentials['mid'],
+                )
+              ));
+          }
+        }
 
 
 			} else {
