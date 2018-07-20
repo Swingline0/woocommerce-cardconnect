@@ -6,6 +6,10 @@ node_js:
 services:
   - docker
 
+cache:
+  directories:
+  - node_modules
+
 script:
   - docker-compose up -d
   - npm run build
