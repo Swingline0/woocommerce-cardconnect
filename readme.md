@@ -28,18 +28,20 @@ each launch, an init script will execute which will configure the Wordpress site
 * Configure basic Woocommerce settings
   * Store info
   * Default shop pages
-* Activate/Configure Cardconnect gateway
+* Activate/Configure CardConnect gateway
 
 ### Getting Started
 
 To get started, follow the steps below:
 
 1. Verify dependency versions:
-   * `node -v` should return >= v8.11.3
+   * `node -v` should return >= v10.6.0
    * `docker -v` should return >= 18.03.1-ce
    * `docker-compose -v` should return >= 1.21.1
 1. Clone this repository, `git clone git@github.com:jl455/woocommerce-cardconnect.git`
 1. Run `npm install` in the project directory to install dependencies
+1. Run `npm run build` to compile typescript (or `npm run watch` to compile on save,
+   during development)
 1. Run `docker-compose up` to launch the development stack
 1. Wait to see the following log messages:
    ```
@@ -95,10 +97,11 @@ will perform the same process as when the application is started.
  * The initialization script can be found in `./scripts/init.sh` and may be
  updated as needed to ensure other developers have a consistent environment.
 
-### Gulp Tasks
+## Releases
 
-- `gulp` : Alias of `compile-js`
-- `gulp compile-js` : Watches & compiles TypeScript and bundles compiled files
+In order to prepare the plugin for release on the WP Plugin Repository, run
+the `./scripts/build.sh` script to prepare all required artifacts. The script
+will populate the `./build` directory with everything that should be shipped.
 
 ## Contributing
 Pull requests welcome!
