@@ -15,4 +15,3 @@ script:
   - npm run build
   - sleep 10
   - cypress run --record --key $CYPRESS_KEY
-  - npm test
