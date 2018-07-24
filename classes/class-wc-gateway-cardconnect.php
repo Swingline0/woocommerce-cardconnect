@@ -8,6 +8,7 @@
 		private $domain = 'cardconnect.com';
 		private $rest_path = '/cardconnect/rest';
 		private $cs_path = '/cardsecure/cs';
+		private $itoke_path = '/itoke/ajax-tokenizer.html';
 		private $cc_ports = array(
 			'sandbox'    => '6443',
 			'production' => '8443',
@@ -1151,9 +1152,14 @@
 			wp_localize_script( 'woocommerce-cardconnect', 'wooCardConnect', array(
 				'isLive'          => !$isSandbox ? true : false,
 				'profilesEnabled' => $this->profiles_enabled ? true : false,
-				'apiEndpoint'     => "https://{$this->site}.{$this->domain}:{$port}{$this->cs_path}",
+				'apiEndpoint'     => array(
+					'basePath'        => "https://{$this->site}.{$this->domain}:{$port}",
+					'cs'              => $this->cs_path,
+					'itoke'           => $this->itoke_path,
+				),
 				'allowedCards'    => $this->card_types,
 				'userSignedIn'    => is_user_logged_in(),
+				'isIframeApiEnabled' => $this->get_option( 'use_iframe' ) === 'yes',
 			) );
 
 			$card_icons = array_reduce( $this->card_types, function ( $carry, $card_name ) {

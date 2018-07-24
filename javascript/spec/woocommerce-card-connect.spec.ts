@@ -1,7 +1,7 @@
 declare let require : any;
 declare let describe : any;
 declare let it : any;
-import WoocommereCardConnect from "../src/card-connect-tokenizer";
+import WoocommereCardConnect from "../src/checkout-card-secure-tokenizer";
 
 let chai = require("chai");
 let expect = chai.expect;

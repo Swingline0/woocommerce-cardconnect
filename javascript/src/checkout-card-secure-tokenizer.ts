@@ -1,11 +1,4 @@
-interface ICardConnectResponse {
-  action: string;
-  data: string;
-}
-
-interface JQueryGlobal extends JQueryStatic {
-    payment: any;
-}
+import { JQueryGlobal, ICardConnectResponse } from './interfaces';
 
 export default class WoocommereCardConnect {
 
