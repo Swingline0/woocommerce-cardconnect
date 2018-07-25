@@ -1,3 +1,5 @@
+Cypress.Commands.add('wp', (command, args) => cy.task('wpCli', { command, args }));
+
 Cypress.Commands.add('prepareToPurchase', () => {
   cy.clearCookies();
   // Go to shop page

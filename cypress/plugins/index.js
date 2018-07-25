@@ -1,17 +1,19 @@
-// ***********************************************************
-// This example plugins/index.js can be used to load plugins
-//
-// You can change the location of this file or turn off loading
-// the plugins file with the 'pluginsFile' configuration option.
-//
-// You can read more here:
-// https://on.cypress.io/plugins-guide
-// ***********************************************************
-
-// This function is called when a project is opened or re-opened (e.g. due to
-// the project's config changing)
+const compose = require('docker-compose');
+const { reduce } = require('lodash');
 
 module.exports = (on, config) => {
-  // `on` is used to hook into various events Cypress emits
-  // `config` is the resolved Cypress config
-}
+  on('task', {
+    wpCli: ({ command, args = {} }) => {
+      const cmdString = reduce(args, (carry, argValue, argKey) => {
+        carry += ` --${argKey}=${argValue}`;
+        return carry;
+      }, `wp ${command}`);
+      console.log(cmdString);
+      return compose.run('wp-cli', cmdString, { cwd: process.cwd() })
+        .then(({ err, out }) => {
+          console.error(err);
+          return args.format === 'json' ? JSON.parse(out) : out
+        });
+    }
+  })
+};
