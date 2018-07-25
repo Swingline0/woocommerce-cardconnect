@@ -39,6 +39,7 @@ wp option update woocommerce_card_connect_settings --format=json '{
         "amex"
     ],
     "enable_profiles":"no",
+    "use_iframe":"no",
     "void_avs":"yes",
     "void_cvv":"yes"
 }'

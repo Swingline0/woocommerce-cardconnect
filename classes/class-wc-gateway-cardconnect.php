@@ -286,6 +286,13 @@
 					'description' => __( 'Void order if <strong>CVV2/CVC2/CID</strong> does not match.', 'woocommerce' ),
 					'default'     => 'yes',
 				),
+				'use_iframe'            => array(
+					'title'       => __( 'IFRAME API', 'woocommerce' ),
+					'label'       => __( 'Active', 'woocommerce' ),
+					'type'        => 'checkbox',
+					'description' => __( 'Uses alternate CardConnect API for retrieving customer credit card number tokens..', 'woocommerce' ),
+					'default'     => 'no',
+				),
 			);
 		}
 
