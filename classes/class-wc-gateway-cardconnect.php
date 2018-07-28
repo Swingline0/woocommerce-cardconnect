@@ -595,6 +595,19 @@
 
 
 		public function handleAuthorizationResponse_Declined( $order, $response, $showNotices = false ) {
+
+			global $cardconnect_raven;
+			if ($cardconnect_raven) {
+				$cardconnect_raven->captureMessage('CardConnect declined transaction', array(), array(
+					'extra' =>  array(
+						'site' => site_url(),
+						'mid' => $this->api_credentials['mid'],
+            'order' => $order,
+            'response' => $response,
+					)
+				));
+			}
+
 			$order->add_order_note( sprintf( __( 'CardConnect declined transaction. Response: %s', 'woocommerce' ), $response['resptext'] ) );
 			$order->update_status( 'failed', __( 'Payment Declined - ', 'cardconnect-payment-gateway' ) );
 
@@ -625,6 +638,18 @@
 
 
 		public function handleAuthorizationResponse_DefaultError( $order, $showNotices = false ) {
+
+			global $cardconnect_raven;
+			if ($cardconnect_raven) {
+				$cardconnect_raven->captureMessage('CardConnect default error', array(), array(
+					'extra' =>  array(
+						'site' => site_url(),
+						'mid' => $this->api_credentials['mid'],
+						'order' => $order,
+					)
+				));
+			}
+
 			$order->update_status( 'failed', __( 'Payment Failed - ', 'cardconnect-payment-gateway' ) );
 
 			return array(
