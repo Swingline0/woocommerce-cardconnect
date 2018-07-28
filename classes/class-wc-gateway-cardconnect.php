@@ -1179,6 +1179,8 @@
 			$template_params = array(
 				'card_icons'       => $card_icons,
 				'is_sandbox'       => $isSandbox,
+				'is_iframe'        => $this->get_option( 'use_iframe' ) === 'yes',
+				'iframe_src'       => "https://{$this->site}.{$this->domain}:{$port}{$this->itoke_path}",
 				'profiles_enabled' => $this->profiles_enabled,
 				'description'      => $this->description,
 			);

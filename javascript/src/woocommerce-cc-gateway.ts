@@ -2,6 +2,7 @@ import { map, isArray } from 'lodash';
 
 import { WoocommerceCardConnectSettings } from './interfaces';
 import initCardSecure from './checkout-card-secure';
+import initHostedIframe from './checkout-hosted-iframe';
 import SavedCards from './saved-cards';
 
 declare const wooCardConnect : WoocommerceCardConnectSettings;
@@ -67,10 +68,8 @@ jQuery(($: any) => {
 
     // Initialize logic to marshall the rest of the checkout process
     if (isIframeApiEnabled) {
-        // @TODO: Init iframe tokenizer here
+        initHostedIframe($, `${basePath}${itoke}`, onTokenSuccess, onError)
     } else {
         initCardSecure($, `${basePath}${cs}`, onTokenSuccess, onError);
     }
-
-    console.log('isIframeApiEnabled', wooCardConnect);
 });

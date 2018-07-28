@@ -32,15 +32,27 @@
 			<?php echo __( 'Card Number', 'woocommerce' ); ?>
 			<span class="required">*</span>
 		</label>
-		<input
-			id="card_connect-card-number"
-			class="input-text wc-credit-card-form-card-number"
-			type="text"
-			maxlength="20"
-			autocomplete="off"
-			placeholder="•••• •••• •••• ••••"
-			<?php echo $is_sandbox ? 'value="4242 4242 4242 4242"' : '';?>
-			/>
+    <?php if ($is_iframe): ?>
+      <iframe
+        width="100%"
+        height="${inputHeight}"
+        style="margin-bottom: 0;"
+        id="card_connect-iframe"
+        src="<?php echo $iframe_src; ?>"
+        frameborder="0"
+        scrolling="no"
+      ></iframe>
+	<?php else: ?>
+      <input
+        id="card_connect-card-number"
+        class="input-text wc-credit-card-form-card-number"
+        type="text"
+        maxlength="20"
+        autocomplete="off"
+        placeholder="•••• •••• •••• ••••"
+		    <?php echo $is_sandbox ? 'value="4242 4242 4242 4242"' : '';?>
+      />
+    <?php endif; ?>
 	</p>
 	<p class="form-row form-row-first">
 		<label for="card_connect-card-expiry">
