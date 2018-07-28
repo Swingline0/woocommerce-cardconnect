@@ -66,7 +66,6 @@
 		  autocomplete="off"
 		  placeholder="<?php echo __( 'MM / YY', 'woocommerce' ); ?>"
 			name="card_connect-card-expiry"
-			<?php echo $is_sandbox ? 'value="12 / 25"' : ''; ?>
 			/>
 	</p>
 	<p class="form-row form-row-last">
@@ -81,7 +80,6 @@
 			autocomplete="off"
 			placeholder="<?php echo __( 'CVC', 'woocommerce' ); ?>"
 			name="card_connect-card-cvc"
-			<?php echo $is_sandbox ? 'value="123"' : ''; ?>
 			/>
 		<em><?php echo __( 'Your CVV number will not be stored on our server.', 'woocommerce' ); ?></em>
 	</p>
