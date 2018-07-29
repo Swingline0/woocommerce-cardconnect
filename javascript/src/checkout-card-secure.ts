@@ -45,9 +45,6 @@ export default ($ : any, csEndpoint : string, onTokenSuccess : Function, onError
                     onError(error);
                     return reject();
                 }
-
-                onTokenSuccess(token);
-
                 // Mask user entered CC number
                 $ccInput.val($.map(creditCard.split(''), (char : string, index : number) => {
                     if (creditCard.length - (index + 1) > 4 ){
@@ -57,6 +54,7 @@ export default ($ : any, csEndpoint : string, onTokenSuccess : Function, onError
                     }
                 }).join(''));
                 $form.unblock();
+                onTokenSuccess(token);
                 return resolve();
             });
         });
