@@ -50,7 +50,6 @@
         maxlength="20"
         autocomplete="off"
         placeholder="•••• •••• •••• ••••"
-		    <?php echo $is_sandbox ? 'value="4242 4242 4242 4242"' : '';?>
       />
     <?php endif; ?>
 	</p>
