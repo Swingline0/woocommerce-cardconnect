@@ -16,7 +16,7 @@ describe('Basic Purchase', () => {
     cy.get('#card_connect-card-number').focus().blur();
     cy.wait(3000);
     cy.get('.card-connect-token').should('have.length', 1);
-    cy.get('#place_order').click({ force: true });
+    cy.get('#place_order').click();
     cy.get('.woocommerce-notice').contains('Thank you. Your order has been received.');
   });
 
@@ -32,7 +32,7 @@ describe('Basic Purchase', () => {
     cy.get('#card_connect-card-number').focus().blur();
     cy.wait(3000);
     cy.get('.card-connect-token').should('have.length', 1);
-    cy.get('#place_order').click({ force: true });
+    cy.get('#place_order').click();
     cy.get('.woocommerce-notice').contains('Thank you. Your order has been received.');
   });
 
@@ -46,8 +46,8 @@ describe('Basic Purchase', () => {
     cy.get('#card_connect-card-number')
       .type('{selectall}{del}Test').blur();
     cy.wait(3000);
-    cy.get('.card-connect-token').should('have.length', 0);
-    cy.get('#place_order').click({ force: true });
+    cy.get('.card-connect-token').should('have.value', '');
+    cy.get('#place_order').click();
     cy.get('.woocommerce-error > li').contains('Please enter a credit card number');
   });
 
@@ -59,8 +59,8 @@ describe('Basic Purchase', () => {
     cy.get('#card_connect-card-number')
       .type('{selectall}{del}4242424242424242');
     cy.wait(3000);
-    cy.get('.card-connect-token').should('have.length', 0);
-    cy.get('#place_order').click({ force: true });
+    cy.get('.card-connect-token').should('have.value', '');
+    cy.get('#place_order').click();
     cy.get('.woocommerce-notice').contains('Thank you. Your order has been received.');
   });
 });
