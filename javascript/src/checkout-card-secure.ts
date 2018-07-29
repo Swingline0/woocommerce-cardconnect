@@ -62,7 +62,7 @@ export default ($ : any, csEndpoint : string, onTokenSuccess : Function, onError
 
     function checkAllowSubmit() : boolean {
         // if we have a token OR a 'saved card' is selected, return FALSE
-        return !!$('input.card-connect-token', $form).length || !!$(SAVED_CARDS_SELECT).val();
+        return !!$('input.card-connect-token', $form).val() || !!$(SAVED_CARDS_SELECT).val();
     }
 
     function checkCardType(cardNumber : string) : boolean {
@@ -100,6 +100,8 @@ export default ($ : any, csEndpoint : string, onTokenSuccess : Function, onError
             })
             .catch((err) => {
                 console.error(err, 'Tokenization failed, can\'t submit form.');
+            })
+            .then(() => {
                 isTokenizationInProgress = false;
             });
         return false;
@@ -108,6 +110,6 @@ export default ($ : any, csEndpoint : string, onTokenSuccess : Function, onError
 
     // Clear token if form is changed
     $form.on('keyup change', `#card_connect-card-number, ${SAVED_CARDS_SELECT}`, () => {
-        $('.card-connect-token').remove();
+        $('.card-connect-token').val('');
     });
 };

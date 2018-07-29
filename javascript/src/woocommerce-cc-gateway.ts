@@ -12,7 +12,11 @@ jQuery(($: any) => {
     const $form = $('form.checkout, form#order_review');
     const $body = $('body');
     let $errors : JQuery<HTMLElement>;
-    let $tokenInput : JQuery<HTMLElement>;
+    const $tokenInput = $('<input />')
+        .attr('name', 'card_connect_token')
+        .attr('type', 'hidden')
+        .addClass('card-connect-token')
+        .appendTo($form);
 
     if (wooCardConnect.profilesEnabled) {
         $body.on('updated_checkout', SavedCards.init);
@@ -27,13 +31,6 @@ jQuery(($: any) => {
      * @param {string} token
      */
     function onTokenSuccess(token : string) : void {
-        if (!$tokenInput) {
-            $tokenInput = $('<input />')
-                .attr('name', 'card_connect_token')
-                .attr('type', 'hidden')
-                .addClass('card-connect-token')
-                .appendTo($form);
-        }
         $tokenInput.val(token);
     }
 
