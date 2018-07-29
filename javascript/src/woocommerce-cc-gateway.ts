@@ -54,14 +54,9 @@ jQuery(($: any) => {
 
         // Clear any existing value from the hidden token input
         if ($tokenInput) $tokenInput.val('');
+        console.log('unblock form', $form);
         $form.unblock();
     }
-
-    // Remove token on checkout error
-    $body.on('checkout_error', () => {
-        if ($errors) $errors.html('');
-        $('.card-connect-token').remove();
-    });
 
     // Initialize logic to marshall the rest of the checkout process
     if (isIframeApiEnabled) {
