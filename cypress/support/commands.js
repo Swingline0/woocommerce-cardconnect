@@ -34,10 +34,4 @@ Cypress.Commands.add('prepareToPurchase', () => {
     .type('{selectall}{del}123-456-7890');
   cy.get('#billing_email')
     .type('{selectall}{del}test@example.com');
-  cy.get('#card_connect-card-number')
-    .type('{selectall}{del}4242424242424242');
-  cy.get('#card_connect-card-expiry')
-    .type('{selectall}{del}10/30');
-  cy.get('#card_connect-card-cvc')
-    .type('{selectall}{del}123');
 });

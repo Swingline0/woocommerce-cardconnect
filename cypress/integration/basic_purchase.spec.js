@@ -7,6 +7,12 @@ describe('Basic Purchase', () => {
   });
 
   it('Makes a purchase with a single blur', () => {
+    cy.get('#card_connect-card-number')
+      .type('{selectall}{del}4242424242424242');
+    cy.get('#card_connect-card-expiry')
+      .type('{selectall}{del}10/30');
+    cy.get('#card_connect-card-cvc')
+      .type('{selectall}{del}123');
     cy.get('#card_connect-card-number').focus().blur();
     cy.wait(3000);
     cy.get('.card-connect-token').should('have.length', 1);
@@ -15,6 +21,12 @@ describe('Basic Purchase', () => {
   });
 
   it('Makes a purchase with multiple blurs', () => {
+    cy.get('#card_connect-card-number')
+      .type('{selectall}{del}4242424242424242');
+    cy.get('#card_connect-card-expiry')
+      .type('{selectall}{del}10/30');
+    cy.get('#card_connect-card-cvc')
+      .type('{selectall}{del}123');
     cy.get('#card_connect-card-number').focus().blur();
     cy.get('#card_connect-card-number').focus().blur();
     cy.get('#card_connect-card-number').focus().blur();
@@ -26,6 +38,12 @@ describe('Basic Purchase', () => {
 
   it('Rejects submission if invalid card entered', () => {
     cy.get('#card_connect-card-number')
+      .type('{selectall}{del}4242424242424242');
+    cy.get('#card_connect-card-expiry')
+      .type('{selectall}{del}10/30');
+    cy.get('#card_connect-card-cvc')
+      .type('{selectall}{del}123');
+    cy.get('#card_connect-card-number')
       .type('{selectall}{del}Test').blur();
     cy.wait(3000);
     cy.get('.card-connect-token').should('have.length', 0);
@@ -34,6 +52,10 @@ describe('Basic Purchase', () => {
   });
 
   it('Tokenizes credit card on submit if it hadn\'t been before', () => {
+    cy.get('#card_connect-card-expiry')
+      .type('{selectall}{del}10/30');
+    cy.get('#card_connect-card-cvc')
+      .type('{selectall}{del}123');
     cy.get('#card_connect-card-number')
       .type('{selectall}{del}4242424242424242');
     cy.wait(3000);
