@@ -15,5 +15,16 @@ module.exports = (on, config) => {
           return args.format === 'json' ? JSON.parse(out) : out
         });
     }
+  });
+
+  // Fix for issue which presented itself in Chrome 68
+  // https://github.com/cypress-io/cypress/issues/2037#issuecomment-407898194
+  on('before:browser:launch', (browser = {}, args) => {
+    if (browser.name === 'chrome') {
+      args = args.filter((arg) => {
+        return arg !== '--disable-blink-features=RootLayerScrolling'
+      })
+      return args
+    }
   })
 };
