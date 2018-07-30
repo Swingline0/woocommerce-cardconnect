@@ -23,6 +23,7 @@
 		private $card_types = array();
 		private $verification;
 		private $registration_enabled;
+		private $iframe_options;
 		public $profiles_enabled;
 		public $saved_cards;
 		public $front_end_id = "13";    // to be sent in every cardConnect API request as field "frontendid"
@@ -129,6 +130,13 @@
 				'mid'  => $this->get_option( "{$this->env_key}_mid" ),
 				'user' => $this->get_option( "{$this->env_key}_user" ),
 				'pass' => $this->get_option( "{$this->env_key}_password" ),
+			);
+
+			$this->iframe_options = array(
+				'enabled' => $this->get_option( 'use_iframe' ) === 'yes',
+				'autostyle' => $this->get_option( 'iframe_autostyle' ) === 'yes',
+				'formatinput' => $this->get_option( 'iframe_formatinput' ) === 'yes',
+				'tokenizewheninactive' => $this->get_option( 'iframe_tokenizewheninactive' ) === 'yes',
 			);
 
 			$this->verification = array(
@@ -290,7 +298,28 @@
 					'title'       => __( 'IFRAME API', 'woocommerce' ),
 					'label'       => __( 'Active', 'woocommerce' ),
 					'type'        => 'checkbox',
-					'description' => __( 'Uses alternate CardConnect API for retrieving customer credit card number tokens..', 'woocommerce' ),
+					'description' => __( 'Uses alternate CardConnect API for retrieving customer credit card number tokens.', 'woocommerce' ),
+					'default'     => 'no',
+				),
+				'iframe_autostyle' => array(
+					'title'       => __( 'IFRAME - Autostyle', 'woocommerce' ),
+					'label'       => __( 'Enable', 'woocommerce' ),
+					'type'        => 'checkbox',
+					'description' => __( 'Attempt to automatically style credit card input to match other fields.', 'woocommerce' ),
+					'default'     => 'no',
+				),
+				'iframe_formatinput' => array(
+					'title'       => __( 'IFRAME - Format CC string', 'woocommerce' ),
+					'label'       => __( 'Enable', 'woocommerce' ),
+					'type'        => 'checkbox',
+					'description' => __( 'Add spaces to credit card input to make it more readable.', 'woocommerce' ),
+					'default'     => 'no',
+				),
+				'iframe_tokenizewheninactive' => array(
+					'title'       => __( 'IFRAME - Process when inactive', 'woocommerce' ),
+					'label'       => __( 'Enable', 'woocommerce' ),
+					'type'        => 'checkbox',
+					'description' => __( 'If issues are reported making payments on mobile, this option may improve user experience.', 'woocommerce' ),
 					'default'     => 'no',
 				),
 			);
@@ -1191,7 +1220,7 @@
 				),
 				'allowedCards'    => $this->card_types,
 				'userSignedIn'    => is_user_logged_in(),
-				'isIframeApiEnabled' => $this->get_option( 'use_iframe' ) === 'yes',
+				'iframeOptions' => $this->iframe_options,
 			) );
 
 			$card_icons = array_reduce( $this->card_types, function ( $carry, $card_name ) {
@@ -1201,11 +1230,34 @@
 				return $carry;
 			}, '' );
 
+			$iframe_src = "https://{$this->site}.{$this->domain}:{$port}{$this->itoke_path}";
+
+			// Querystring params: https://developer.cardconnect.com/hosted-iframe-tokenizer#optional-parameters
+
+			// Sets some default params to:
+			// invalidinputevent - CardConnect posts error message message if an invalid/incomplete number entered
+			// enhancedresponse - CardConnect posts verbose messages, specifically error codes and error messages
+			$iframe_src .= '?invalidinputevent=true&enhancedresponse=true';
+
+			// Styles the card number to be separated every four numbers
+			if ($this->iframe_options['formatinput']) {
+				$iframe_src .= '&formatinput=true';
+			}
+
+			// Validation & tokenization for manual input is normally performed when an onBlur event occurs on the
+			// input field (e.g. when the user clicks/tabs to the next field in the form). If 'tokenizewheninactive'
+			// is set to true, validation & tokenization will be performed once the input field stops receiving input
+			// from the user.
+			if ($this->iframe_options['tokenizewheninactive']) {
+				$iframe_src .= '&tokenizewheninactive=true';
+				$iframe_src .= '&inactivityto=2000';
+			}
+
 			$template_params = array(
 				'card_icons'       => $card_icons,
 				'is_sandbox'       => $isSandbox,
-				'is_iframe'        => $this->get_option( 'use_iframe' ) === 'yes',
-				'iframe_src'       => "https://{$this->site}.{$this->domain}:{$port}{$this->itoke_path}",
+				'is_iframe'        => $this->iframe_options['enabled'],
+				'iframe_src'       => $iframe_src,
 				'profiles_enabled' => $this->profiles_enabled,
 				'description'      => $this->description,
 			);

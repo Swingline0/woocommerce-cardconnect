@@ -1,6 +1,49 @@
-import { includes, get } from 'lodash';
+import { includes, get, reduce } from 'lodash';
+import * as computedStyle from 'computed-style';
+
+import { IFRAME_CSS_WHITELIST } from './constants';
+import { WoocommerceCardConnectSettings } from "./interfaces";
+
+declare const wooCardConnect : WoocommerceCardConnectSettings;
 
 export default ($ : any, csEndpoint : string, onTokenSuccess : Function, onError : Function) => {
+
+    const { iframeOptions: { autostyle, formatinput, tokenizewheninactive } } = wooCardConnect;
+
+    console.log('autostyle', autostyle, 'formatinput', formatinput, 'tokenizewheninactive', tokenizewheninactive);
+
+    // If autostyling is enabled, scrape styles and replace iframe with a new iteration
+    if (autostyle) {
+        const $frame = $('#card_connect-iframe');
+        const $cardHolderName = $('#card_connect-card-name');
+        const inputHeight = $cardHolderName.outerHeight();
+        const inputStyles = extractStyles($cardHolderName[0]);
+        const inputStyleBlock = encodeURIComponent(`
+            body {margin: 0;}
+            input {${inputStyles}}
+            .error {border: 1px solid red;}
+        `);
+        const frameSrc = $frame.attr('src');
+        const querystring = `css=${inputStyleBlock}`;
+
+        const setIframeSrc = () => {
+            if (inputStyles) {
+                $('#card_connect-iframe').replaceWith($(`
+                  <iframe
+                    width="100%"
+                    height="${inputHeight}"
+                    style="margin-bottom: 0;"
+                    id="card_connect-iframe"
+                    src="${frameSrc}&${querystring}"
+                    frameborder="0"
+                    scrolling="no"/>
+                `));
+            }
+        };
+        // Woocommerce will "reload" the section which contains this field, as such it must be re-set each time
+        $('body').on('updated_checkout', setIframeSrc);
+        setIframeSrc();
+    }
 
     // Bind event listener
     window.addEventListener('message', function(event : MessageEvent) {
@@ -8,14 +51,35 @@ export default ($ : any, csEndpoint : string, onTokenSuccess : Function, onError
             return;
         }
         try {
-            console.log(JSON.parse(event.data));
-            const token = get(JSON.parse(event.data), 'message', false);
+            const messagePayload = JSON.parse(event.data);
+            console.log('messagePayload', messagePayload);
+            const token = get(messagePayload, 'token', false);
             if (!token) {
-                return onError('Failed to parse response from CardConnect.');
+                return onError(get(messagePayload, 'errorMessage', 'Bad response from CardConnect.'));
             }
-            onTokenSuccess(get(JSON.parse(event.data), 'message'));
+            onTokenSuccess(token, 'token');
         } catch (e) {
             onError(e.toString());
         }
     }, false);
+}
+
+/**
+ * Returns a string off CSS properties from the given element which
+ *
+ * Only returns styles from whitelisted properties (via CardConnect)
+ * Only returns styles which have a value
+ * @param {Node} DOM node
+ * @returns {string} A string of CSS properties and values (e.g. "color: red; font-weight: bold;")
+ */
+function extractStyles(node : Node) {
+    const computedStyles = reduce(IFRAME_CSS_WHITELIST, (carry, cssProp) => {
+        const styleValue = computedStyle(node, cssProp);
+        if (!styleValue) {
+            return carry;
+        }
+        carry += `${cssProp}: ${styleValue};`;
+        return carry;
+    }, '');
+    return computedStyles;
 }

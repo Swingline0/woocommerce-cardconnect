@@ -19,6 +19,7 @@
   "devDependencies": {
     "browserify": "^16.2.2",
     "chai": "^2.2.0",
+    "computed-style": "^0.3.0",
     "cypress": "^3.0.2",
     "docker-compose": "^0.8.1",
     "gulp": "^3.9.1",

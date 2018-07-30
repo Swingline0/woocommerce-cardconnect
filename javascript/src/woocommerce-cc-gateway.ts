@@ -8,7 +8,7 @@ import SavedCards from './saved-cards';
 declare const wooCardConnect : WoocommerceCardConnectSettings;
 
 jQuery(($: any) => {
-    const { apiEndpoint: { basePath, cs, itoke }, isIframeApiEnabled } = wooCardConnect;
+    const { apiEndpoint: { basePath, cs, itoke }, iframeOptions } = wooCardConnect;
     const $form = $('form.checkout, form#order_review');
     const $body = $('body');
     let $errors : JQuery<HTMLElement>;
@@ -58,7 +58,7 @@ jQuery(($: any) => {
     }
 
     // Initialize logic to marshall the rest of the checkout process
-    if (isIframeApiEnabled) {
+    if (iframeOptions.enabled) {
         initHostedIframe($, `${basePath}${itoke}`, onTokenSuccess, onError)
     } else {
         initCardSecure($, `${basePath}${cs}`, onTokenSuccess, onError);

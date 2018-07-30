@@ -4,6 +4,13 @@ interface APIEndpointStruct {
     itoke: string;
 }
 
+interface IframeOptionsStruct {
+    enabled: boolean;
+    autostyle: boolean;
+    formatinput: boolean;
+    tokenizewheninactive: boolean;
+}
+
 // Global config object provided via wp_localize_script
 export interface WoocommerceCardConnectSettings {
     isLive: boolean;
@@ -11,7 +18,7 @@ export interface WoocommerceCardConnectSettings {
     apiEndpoint: APIEndpointStruct;
     allowedCards: Array<String>;
     userSignedIn: boolean;
-    isIframeApiEnabled: boolean;
+    iframeOptions: IframeOptionsStruct;
 }
 
 export interface ICardConnectResponse {
