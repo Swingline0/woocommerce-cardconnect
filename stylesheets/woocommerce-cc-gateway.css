@@ -13,6 +13,12 @@
   display: inline;
 }
 
+.card-connect-allowed-card__li::before,
+.card-connect-allowed-card__li::after {
+  display: none !important;
+}
+
 .card-connect-allowed-cards__img {
-  width: 60px;
+  max-width: 60px !important;
+  width: 100%;
 }
