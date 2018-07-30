@@ -35,3 +35,14 @@ Cypress.Commands.add('prepareToPurchase', () => {
   cy.get('#billing_email')
     .type('{selectall}{del}test@example.com');
 });
+
+/**
+ * Configures payment gateway setting for iframe tokenizer
+ * @param isEnabled {boolean}
+ */
+Cypress.Commands.add('setIframeEnabled', isEnabled => {
+  const val = isEnabled ? 'yes' : 'no';
+  cy.wp(`option patch update woocommerce_card_connect_settings use_iframe ${val}`);
+  cy.wp('wc payment_gateway get card_connect', { user: 1, format: 'json' })
+    .its('settings.use_iframe.value').should('eq', val);
+});

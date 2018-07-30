@@ -1,16 +1,5 @@
-/**
- * Configures payment gateway setting for iframe tokenizer
- * @param isEnabled {boolean}
- */
-const setIframeEnabled = isEnabled => {
-  const val = isEnabled ? 'yes' : 'no';
-  cy.wp(`option patch update woocommerce_card_connect_settings use_iframe ${val}`);
-  cy.wp('wc payment_gateway get card_connect', { user: 1, format: 'json' })
-    .its('settings.use_iframe.value').should('eq', val);
-};
-
 describe('Basic Purchase with hosted iFrame Tokenizer', () => {
-  // before(() => setIframeEnabled(true));
+  before(() => cy.setIframeEnabled(true));
 
   it('Gets ready to purchase something', () => {
     cy.prepareToPurchase();
@@ -36,5 +25,4 @@ describe('Basic Purchase with hosted iFrame Tokenizer', () => {
       cy.get('.woocommerce-notice').contains('Thank you. Your order has been received.');
     })
   });
-  // after(() => setIframeEnabled(false))
 });

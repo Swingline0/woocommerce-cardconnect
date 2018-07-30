@@ -1,5 +1,7 @@
 describe('Basic Purchases with validation errors', () => {
 
+  before(() => cy.setIframeEnabled(false));
+
   // This block will run before every test. It ensure that there are items in the cart and
   // the custom billing info is completed. Skip to the first function `it(...` to see a test.
   beforeEach(() => {
