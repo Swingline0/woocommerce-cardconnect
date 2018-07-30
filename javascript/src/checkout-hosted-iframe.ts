@@ -8,9 +8,7 @@ declare const wooCardConnect : WoocommerceCardConnectSettings;
 
 export default ($ : any, csEndpoint : string, onTokenSuccess : Function, onError : Function) => {
 
-    const { iframeOptions: { autostyle, formatinput, tokenizewheninactive } } = wooCardConnect;
-
-    console.log('autostyle', autostyle, 'formatinput', formatinput, 'tokenizewheninactive', tokenizewheninactive);
+    const { iframeOptions: { autostyle } } = wooCardConnect;
 
     // If autostyling is enabled, scrape styles and replace iframe with a new iteration
     if (autostyle) {
