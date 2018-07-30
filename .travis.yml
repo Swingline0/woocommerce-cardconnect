@@ -3,12 +3,17 @@ language: node_js
 node_js:
   - 10
 
+addons:
+  chrome: stable
+
 services:
   - docker
 
 cache:
   directories:
   - node_modules
+  - ~/.npm
+  - ~/.cache
 
 script:
   - docker-compose up -d
