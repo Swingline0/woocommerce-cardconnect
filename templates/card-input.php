@@ -35,7 +35,6 @@
     <?php if ($is_iframe): ?>
       <iframe
         width="100%"
-        height="${inputHeight}"
         style="margin-bottom: 0;"
         id="card_connect-iframe"
         src="<?php echo $iframe_src; ?>"
