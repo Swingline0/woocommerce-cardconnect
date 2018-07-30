@@ -23,7 +23,10 @@ module.exports = (on, config) => {
     if (browser.name === 'chrome') {
       args = args.filter((arg) => {
         return arg !== '--disable-blink-features=RootLayerScrolling'
-      })
+      });
+      args.push('--disable-web-security');
+      args.push('--user-data-dir');
+      args.push("--disable-site-isolation-trials");
       return args
     }
   })
