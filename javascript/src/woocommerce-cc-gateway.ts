@@ -50,7 +50,9 @@ jQuery(($: any) => {
 
         $errors.html(`<ul class="woocommerce-error">${errorText}</ul>`);
 
-        // @TODO: Trigger a smooth scroll to errors element, perhaps?
+        $([document.documentElement, document.body]).animate({
+            scrollTop: $('.payment_method_card_connect').offset().top
+        }, 500);
 
         // Clear any existing value from the hidden token input
         if ($tokenInput) $tokenInput.val('');
