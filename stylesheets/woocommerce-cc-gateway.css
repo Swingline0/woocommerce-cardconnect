@@ -21,4 +21,5 @@
 .card-connect-allowed-cards__img {
   max-width: 60px !important;
   width: 100%;
+  display: inline-block !important;
 }
