@@ -54,7 +54,6 @@ jQuery(($: any) => {
 
         // Clear any existing value from the hidden token input
         if ($tokenInput) $tokenInput.val('');
-        console.log('unblock form', $form);
         $form.unblock();
     }
 
