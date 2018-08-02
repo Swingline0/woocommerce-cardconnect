@@ -39,8 +39,9 @@ jQuery(($: any) => {
      *
      * Wraps a one or many errors in <li>'s and displays them on the form
      * @param {string | string[]} error
+     * @param {boolean} clearToken - reset token on error push
      */
-    function onError(error : string | string[]) : void {
+    function onError(error : string | string[], clearToken : boolean) : void {
         if (!$errors) $errors = $('.js-card-connect-errors', $form);
 
         // Map an array of strings into individual <li>'s, or wrap a single error in <li> tags
@@ -55,7 +56,7 @@ jQuery(($: any) => {
         }, 500);
 
         // Clear any existing value from the hidden token input
-        if ($tokenInput) $tokenInput.val('');
+        if ($tokenInput && clearToken) $tokenInput.val('');
         $form.unblock();
     }
 

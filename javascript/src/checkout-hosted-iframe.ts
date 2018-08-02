@@ -6,9 +6,24 @@ import { WoocommerceCardConnectSettings } from "./interfaces";
 
 declare const wooCardConnect : WoocommerceCardConnectSettings;
 
+const ERROR_MESSAGES = {
+    CC: 'You must enter a valid credit card number.',
+    EXPIRY: 'You must enter a valid expiration date.',
+    CVC: 'You must enter a valid CVC code.',
+};
+
 export default ($ : any, csEndpoint : string, onTokenSuccess : Function, onError : Function) => {
 
     const { iframeOptions: { autostyle } } = wooCardConnect;
+    const $form : any = $('form.checkout, form#order_review');
+    const $tokenInput = $('.card-connect-token');
+
+    const clearError = errorText => {
+        const $errContainer = $('.js-card-connect-errors');
+        $errContainer
+            .find(`li:contains(${errorText})`)
+            .remove();
+    };
 
     // If autostyling is enabled, scrape styles and replace iframe with a new iteration
     if (autostyle) {
@@ -54,11 +69,39 @@ export default ($ : any, csEndpoint : string, onTokenSuccess : Function, onError
             if (!token) {
                 return onError(get(messagePayload, 'errorMessage', 'Bad response from CardConnect.'));
             }
+            clearError(ERROR_MESSAGES.CC);
             onTokenSuccess(token, 'token');
         } catch (e) {
             onError(e.toString());
         }
     }, false);
+
+    $form.on('blur input change', '.wc-credit-card-form-card-cvc', () => {
+        clearError(ERROR_MESSAGES.CVC);
+    });
+    $form.on('blur input change', '.wc-credit-card-form-card-expiry', () => {
+        clearError(ERROR_MESSAGES.EXPIRY);
+    });
+
+    // Add submission validation checking
+    $form.on('checkout_place_order_card_connect', () => {
+        const errors = [];
+        let resetToken = false;
+        if (!$tokenInput.val()) {
+            errors.push(ERROR_MESSAGES.CC);
+            resetToken = true;
+        }
+        if (!$('.wc-credit-card-form-card-expiry').val()) {
+            errors.push(ERROR_MESSAGES.EXPIRY);
+        }
+        if (!$('.wc-credit-card-form-card-cvc').val()) {
+            errors.push(ERROR_MESSAGES.CVC);
+        }
+        if (errors.length) {
+            onError(errors, resetToken);
+            return false;
+        }
+    });
 }
 
 /**

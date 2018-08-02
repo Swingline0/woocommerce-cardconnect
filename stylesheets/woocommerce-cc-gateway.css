@@ -23,3 +23,7 @@
   width: 100%;
   display: inline-block !important;
 }
+
+.woocommerce-error:empty {
+  display: none;
+}
