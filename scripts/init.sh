@@ -19,7 +19,7 @@ wp plugin activate woocommerce-cardconnect
 
 echo "INFO: Installed and activated Woocommerce and Cardconnect plugin"
 
-wp config set CARD_CONNECT_ENABLE_ADVANCED_CONFIGURATION true --type=constant
+wp config set WC_CC_ADVANCED true --type=constant
 
 wp option update woocommerce_card_connect_settings --format=json '{
     "enabled":"yes",

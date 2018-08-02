@@ -297,7 +297,7 @@
 				)
 			);
 
-			if (defined('CARD_CONNECT_ENABLE_ADVANCED_CONFIGURATION') && CARD_CONNECT_ENABLE_ADVANCED_CONFIGURATION) {
+			if (defined('WC_CC_ADVANCED') && WC_CC_ADVANCED) {
 				$this->form_fields += array(
 				'iframe_heading' => array(
 					'title' => _( 'Advanced Tokenization Settings', 'woocommerce' ),
