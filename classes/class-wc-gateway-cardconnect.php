@@ -937,7 +937,7 @@
 				'cvv2'       => $checkoutFormData['cvv2'],
 				'amount'     => $this->get_order_total_formatted( $order ),
 				'currency'   => $this->getCardConnectCurrencyCode( $order->get_currency() ),
-				'orderid'    => sprintf( __( '%s - Order #%s', 'woocommerce' ), esc_html( get_bloginfo( 'name', 'display' ) ), $order->get_order_number() ),
+				'orderid'    => $order->get_order_number(),
 				'name'       => $checkoutFormData['card_name'] ? $checkoutFormData['card_name'] : trim( $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() ),
 				'address'    => $order->get_billing_address_1(),
 				'city'       => $order->get_billing_city(),
