@@ -133,10 +133,11 @@
 			);
 
 			$this->iframe_options = array(
-				'enabled' => $this->get_option( 'use_iframe' ) === 'yes',
-				'autostyle' => $this->get_option( 'iframe_autostyle' ) === 'yes',
-				'formatinput' => $this->get_option( 'iframe_formatinput' ) === 'yes',
-				'tokenizewheninactive' => $this->get_option( 'iframe_tokenizewheninactive' ) === 'yes',
+				'enabled' => $this->get_option( 'use_iframe' ) ? $this->get_option( 'use_iframe' ) === 'yes' : true,
+				'autostyle' => $this->get_option( 'iframe_autostyle' ) ? $this->get_option( 'iframe_autostyle' ) === 'yes' : true,
+				'formatinput' => $this->get_option( 'iframe_formatinput' ) ? $this->get_option( 'iframe_formatinput' ) === 'yes' : true,
+				'tokenizewheninactive' => $this->get_option( 'iframe_tokenizewheninactive' ) ? $this->get_option( 'iframe_tokenizewheninactive' ) === 'yes' : true,
+				'inactivityto' => $this->get_option( 'iframe_inactivityto' ) ? $this->get_option( 'iframe_inactivityto' ) : 500,
 			);
 
 			$this->verification = array(
