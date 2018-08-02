@@ -294,33 +294,48 @@
 					'description' => __( 'Void order if <strong>CVV2/CVC2/CID</strong> does not match.', 'woocommerce' ),
 					'default'     => 'yes',
 				),
-				'use_iframe'            => array(
-					'title'       => __( 'IFRAME API', 'woocommerce' ),
+				'iframe_heading' => array(
+					'title' => _( 'Advanced Tokenization Settings', 'woocommerce' ),
+					'type' => 'title',
+				),
+				'use_iframe'    => array(
+					'title'       => __( 'Enable IFRAME API', 'woocommerce' ),
 					'label'       => __( 'Active', 'woocommerce' ),
 					'type'        => 'checkbox',
-					'description' => __( 'Uses alternate CardConnect API for retrieving customer credit card number tokens.', 'woocommerce' ),
-					'default'     => 'no',
+					'description' => __( 'Use CardConnect API for retrieving customer credit card number tokens. If disabled, fallback to tokenizing directly with CardSecure API.', 'woocommerce' ),
+					'default'     => 'yes',
 				),
 				'iframe_autostyle' => array(
-					'title'       => __( 'IFRAME - Autostyle', 'woocommerce' ),
+					'class'       => 'iframe-config',
+					'title'       => __( ' Autostyle', 'woocommerce' ),
 					'label'       => __( 'Enable', 'woocommerce' ),
 					'type'        => 'checkbox',
 					'description' => __( 'Attempt to automatically style credit card input to match other fields.', 'woocommerce' ),
-					'default'     => 'no',
+					'default'     => 'yes',
 				),
 				'iframe_formatinput' => array(
-					'title'       => __( 'IFRAME - Format CC string', 'woocommerce' ),
+					'class'       => 'iframe-config',
+					'title'       => __( 'Format CC string', 'woocommerce' ),
 					'label'       => __( 'Enable', 'woocommerce' ),
 					'type'        => 'checkbox',
 					'description' => __( 'Add spaces to credit card input to make it more readable.', 'woocommerce' ),
-					'default'     => 'no',
+					'default'     => 'yes',
 				),
 				'iframe_tokenizewheninactive' => array(
-					'title'       => __( 'IFRAME - Process when inactive', 'woocommerce' ),
+					'class'       => 'iframe-config',
+					'title'       => __( 'Process when inactive', 'woocommerce' ),
 					'label'       => __( 'Enable', 'woocommerce' ),
 					'type'        => 'checkbox',
 					'description' => __( 'If issues are reported making payments on mobile, this option may improve user experience.', 'woocommerce' ),
-					'default'     => 'no',
+					'default'     => 'yes',
+				),
+				'iframe_inactivityto' => array(
+					'class'       => 'iframe-config',
+					'title'       => __( 'Timeout', 'woocommerce' ),
+					'label'       => __( 'Enable', 'woocommerce' ),
+					'type'        => 'number',
+					'description' => __( 'Controls how long the page will wait after an input event before considering input complete.', 'woocommerce' ),
+					'default'     => 500,
 				),
 			);
 		}
@@ -460,6 +475,14 @@
                         } else {
                             sandbox.hide();
                             production.show();
+                        }
+                    }).change();
+                    jQuery('#woocommerce_card_connect_use_iframe').on('change', function () {
+                        var iframeConfig = jQuery('.iframe-config').closest('tr');
+                        if (jQuery(this).is(':checked')) {
+                            iframeConfig.show();
+                        } else {
+                            iframeConfig.hide();
                         }
                     }).change();
                     jQuery(function ($) {
