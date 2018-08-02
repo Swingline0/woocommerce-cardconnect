@@ -3,7 +3,7 @@
  * Plugin Name: CardConnect Payment Gateway
  * Plugin URI: https://wordpress.org/plugins/cardconnect-payment-module
  * Description: Accept credit card payments in your WooCommerce store!
- * Version: 2.1.0-beta-1
+ * Version: 2.1.0-beta-2
  * Author: CardConnect <jle@cardconnect.com>
  * Author URI: https://cardconnect.com
  * License: GNU General Public License v2
@@ -24,7 +24,7 @@ if(!defined('ABSPATH')){
 	exit; // Exit if accessed directly
 }
 
-define('WC_CARDCONNECT_VER', '2.1.0-beta-1');
+define('WC_CARDCONNECT_VER', '2.1.0-beta-2');
 define('WC_CARDCONNECT_PLUGIN_PATH', untrailingslashit(plugin_basename(__DIR__)));
 define('WC_CARDCONNECT_TEMPLATE_PATH', untrailingslashit(plugin_dir_path(__FILE__)) . '/templates/');
 define('WC_CARDCONNECT_PLUGIN_URL', untrailingslashit(plugins_url('', __FILE__)));
