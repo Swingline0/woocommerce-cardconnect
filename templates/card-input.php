@@ -27,7 +27,7 @@
 			name="card_connect-card-name"
 		/>
 	</p>
-	<p class="form-row form-row-wide">
+	<p class="form-row form-row-wide validate-required">
 		<label for="card_connect-card-number">
 		<?php echo __( 'Card Number', 'woocommerce' ); ?>
 			<span class="required">*</span>
@@ -44,7 +44,7 @@
 		<?php else: ?>
 			<input
 				id="card_connect-card-number"
-				class="input-text wc-credit-card-form-card-number"
+				class="input-text wc-credit-card-form-card-number validate-required"
 				type="text"
 				maxlength="20"
 				autocomplete="off"
@@ -52,7 +52,7 @@
 			/>
 		<?php endif; ?>
 	</p>
-	<p class="form-row form-row-first">
+	<p class="form-row form-row-first validate-required">
 		<label for="card_connect-card-expiry">
 		<?php echo __( 'Expiry (MM/YY)', 'woocommerce' ); ?>
 			<span class="required">*</span>
@@ -66,7 +66,7 @@
 			name="card_connect-card-expiry"
 		/>
 	</p>
-	<p class="form-row form-row-last">
+	<p class="form-row form-row-last validate-required">
 		<label for="card_connect-card-cvc">
 		<?php echo __( 'Card Code', 'woocommerce' ); ?>
 			<span class="required">*</span>
