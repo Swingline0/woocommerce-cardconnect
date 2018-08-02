@@ -1258,14 +1258,16 @@
 				return $carry;
 			}, '' );
 
-			$iframe_src = "https://{$this->site}.{$this->domain}:{$port}{$this->itoke_path}";
+			$iframe_src = "https://{$this->site}.{$this->domain}:{$port}{$this->itoke_path}?";
 
 			// Querystring params: https://developer.cardconnect.com/hosted-iframe-tokenizer#optional-parameters
 
 			// Sets some default params to:
 			// invalidinputevent - CardConnect posts error message message if an invalid/incomplete number entered
 			// enhancedresponse - CardConnect posts verbose messages, specifically error codes and error messages
-			$iframe_src .= '?invalidinputevent=true&enhancedresponse=true';
+
+			// Enable below to instruct iframe to return detailed data rather than just the token
+			// $iframe_src .= '?invalidinputevent=true&enhancedresponse=true';
 
 			// Styles the card number to be separated every four numbers
 			if ($this->iframe_options['formatinput']) {

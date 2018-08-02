@@ -50,8 +50,7 @@ export default ($ : any, csEndpoint : string, onTokenSuccess : Function, onError
         }
         try {
             const messagePayload = JSON.parse(event.data);
-            console.log('messagePayload', messagePayload);
-            const token = get(messagePayload, 'token', false);
+            const token = get(messagePayload, 'message', false);
             if (!token) {
                 return onError(get(messagePayload, 'errorMessage', 'Bad response from CardConnect.'));
             }
