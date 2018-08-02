@@ -19,6 +19,8 @@ wp plugin activate woocommerce-cardconnect
 
 echo "INFO: Installed and activated Woocommerce and Cardconnect plugin"
 
+wp config set CARD_CONNECT_ENABLE_ADVANCED_CONFIGURATION true --type=constant
+
 wp option update woocommerce_card_connect_settings --format=json '{
     "enabled":"yes",
     "title":"Credit card",
@@ -39,7 +41,6 @@ wp option update woocommerce_card_connect_settings --format=json '{
         "amex"
     ],
     "enable_profiles":"no",
-    "use_iframe":"no",
     "void_avs":"yes",
     "void_cvv":"yes"
 }'

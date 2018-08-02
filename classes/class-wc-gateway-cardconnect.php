@@ -294,7 +294,11 @@
 					'type'        => 'checkbox',
 					'description' => __( 'Void order if <strong>CVV2/CVC2/CID</strong> does not match.', 'woocommerce' ),
 					'default'     => 'yes',
-				),
+				)
+			);
+
+			if (defined('CARD_CONNECT_ENABLE_ADVANCED_CONFIGURATION') && CARD_CONNECT_ENABLE_ADVANCED_CONFIGURATION) {
+				$this->form_fields += array(
 				'iframe_heading' => array(
 					'title' => _( 'Advanced Tokenization Settings', 'woocommerce' ),
 					'type' => 'title',
@@ -337,8 +341,8 @@
 					'type'        => 'number',
 					'description' => __( 'Controls how long the page will wait after an input event before considering input complete.', 'woocommerce' ),
 					'default'     => 500,
-				),
-			);
+				));
+			}
 		}
 
 
