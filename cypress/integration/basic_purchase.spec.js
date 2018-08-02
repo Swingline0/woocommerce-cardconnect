@@ -54,6 +54,7 @@ describe('Basic Purchase', () => {
   });
 
   it('Tokenizes credit card on submit if it hadn\'t been before', () => {
+    cy.wait(3000);
     cy.get('#card_connect-card-expiry')
       .type('{selectall}{del}10/30');
     cy.get('#card_connect-card-cvc')
