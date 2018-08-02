@@ -1274,7 +1274,7 @@
 			// from the user.
 			if ($this->iframe_options['tokenizewheninactive']) {
 				$iframe_src .= '&tokenizewheninactive=true';
-				$iframe_src .= '&inactivityto=2000';
+				$iframe_src .= '&inactivityto=' . $this->iframe_options['inactivityto'];
 			}
 
 			$template_params = array(
