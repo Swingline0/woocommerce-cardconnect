@@ -86,12 +86,13 @@ export default ($ : any, csEndpoint : string, onTokenSuccess : Function, onError
     // Add submission validation checking
     $form.on('checkout_place_order_card_connect', () => {
         const errors = [];
+        const isSavedCardSelected = !!$('#card_connect-cards').find(':selected').val();
         let resetToken = false;
-        if (!$tokenInput.val()) {
+        if (!isSavedCardSelected && !$tokenInput.val()) {
             errors.push(ERROR_MESSAGES.CC);
             resetToken = true;
         }
-        if (!$('.wc-credit-card-form-card-expiry').val()) {
+        if (!isSavedCardSelected && !$('.wc-credit-card-form-card-expiry').val()) {
             errors.push(ERROR_MESSAGES.EXPIRY);
         }
         if (!$('.wc-credit-card-form-card-cvc').val()) {
