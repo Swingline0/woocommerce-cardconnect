@@ -1,7 +1,9 @@
 Cypress.Commands.add('wp', (command, args) => cy.task('wpCli', { command, args }));
 
-Cypress.Commands.add('prepareToPurchase', () => {
-  cy.clearCookies();
+Cypress.Commands.add('prepareToPurchase', (resetSession = true) => {
+  if (resetSession) {
+    cy.clearCookies();
+  }
   // Go to shop page
   cy.visit(`?post_type=product`);
   cy.get('title').contains('Products – Test Site');
@@ -45,6 +47,16 @@ Cypress.Commands.add('setIframeEnabled', isEnabled => {
   cy.wp(`option patch update woocommerce_card_connect_settings use_iframe ${val}`);
   cy.wp('wc payment_gateway get card_connect', { user: 1, format: 'json' })
     .its('settings.use_iframe.value').should('eq', val);
+});
+
+/**
+ * Configures store to allow saved cards
+ * @param isEnabled {boolean}
+ */
+Cypress.Commands.add('setSavedCardsEnabled', isEnabled => {
+  const val = isEnabled ? 'yes' : 'no';
+  cy.wp(`option update woocommerce_enable_signup_and_login_from_checkout ${val}`);
+  cy.wp(`option patch update woocommerce_card_connect_settings enable_profiles ${val}`);
 });
 
 /**
