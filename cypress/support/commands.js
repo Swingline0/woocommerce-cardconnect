@@ -46,3 +46,17 @@ Cypress.Commands.add('setIframeEnabled', isEnabled => {
   cy.wp('wc payment_gateway get card_connect', { user: 1, format: 'json' })
     .its('settings.use_iframe.value').should('eq', val);
 });
+
+/**
+ * Sets iframe input to the value provided
+ * @param ccInput {string}
+ */
+Cypress.Commands.add('setIframeCCInput', ccInput =>
+  cy.get('#card_connect-iframe').then(function ($iframe) {
+    const cyFrame = cy.wrap($iframe.contents().find('body'));
+
+    // Populate CardConnect iframe's input
+    cyFrame.find('#ccnumfield')
+      .type(ccInput);
+  })
+);
