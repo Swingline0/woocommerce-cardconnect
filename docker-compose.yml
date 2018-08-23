@@ -1,0 +1,59 @@
+version: '3.3'
+services:
+  wordpress:
+    image: wordpress:4-php7.2-apache
+    restart: unless-stopped
+    ports:
+      - 8080:80
+    volumes:
+      - wp_data:/var/www/html
+      - .:/var/www/html/wp-content/plugins/woocommerce-cardconnect:cached
+    environment:
+      WORDPRESS_DB_PASSWORD: TEST
+      WORDPRESS_DEBUG: 1
+
+  mysql:
+    image: mysql:5.7
+    restart: unless-stopped
+#    ports:
+#      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: TEST
+
+  wp-cli:
+    image: wordpress:cli-php7.2
+    volumes:
+      - wp_data:/var/www/html
+      - .:/var/www/html/wp-content/plugins/woocommerce-cardconnect
+    depends_on:
+      - mysql
+      - wordpress
+    command: /bin/sh -c "sleep 15 && ./wp-content/plugins/woocommerce-cardconnect/scripts/init.sh"
+    user: xfs
+
+  composer:
+    image: composer:1
+    volumes:
+      - wp_data:/var/www/html
+      - .:/var/www/html/wp-content/plugins/woocommerce-cardconnect
+    working_dir: /var/www/html/wp-content/plugins/woocommerce-cardconnect
+    command: install
+    depends_on:
+      - wordpress
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+      - mysql
+    links:
+      - mysql
+    ports:
+      - 9090:80
+    environment:
+      PMA_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: TEST
+      MYSQL_ROOT_PASSWORD: TEST
+
+volumes:
+  wp_data:

@@ -8,6 +8,7 @@
 		private $domain = 'cardconnect.com';
 		private $rest_path = '/cardconnect/rest';
 		private $cs_path = '/cardsecure/cs';
+		private $itoke_path = '/itoke/ajax-tokenizer.html';
 		private $cc_ports = array(
 			'sandbox'    => '6443',
 			'production' => '8443',
@@ -22,6 +23,7 @@
 		private $card_types = array();
 		private $verification;
 		private $registration_enabled;
+		private $iframe_options;
 		public $profiles_enabled;
 		public $saved_cards;
 		public $front_end_id = "13";    // to be sent in every cardConnect API request as field "frontendid"
@@ -128,6 +130,14 @@
 				'mid'  => $this->get_option( "{$this->env_key}_mid" ),
 				'user' => $this->get_option( "{$this->env_key}_user" ),
 				'pass' => $this->get_option( "{$this->env_key}_password" ),
+			);
+
+			$this->iframe_options = array(
+				'enabled' => $this->get_option( 'use_iframe' ) ? $this->get_option( 'use_iframe' ) === 'yes' : true,
+				'autostyle' => $this->get_option( 'iframe_autostyle' ) ? $this->get_option( 'iframe_autostyle' ) === 'yes' : true,
+				'formatinput' => $this->get_option( 'iframe_formatinput' ) ? $this->get_option( 'iframe_formatinput' ) === 'yes' : true,
+				'tokenizewheninactive' => $this->get_option( 'iframe_tokenizewheninactive' ) ? $this->get_option( 'iframe_tokenizewheninactive' ) === 'yes' : true,
+				'inactivityto' => $this->get_option( 'iframe_inactivityto' ) ? $this->get_option( 'iframe_inactivityto' ) : 500,
 			);
 
 			$this->verification = array(
@@ -284,8 +294,55 @@
 					'type'        => 'checkbox',
 					'description' => __( 'Void order if <strong>CVV2/CVC2/CID</strong> does not match.', 'woocommerce' ),
 					'default'     => 'yes',
-				),
+				)
 			);
+
+			if (defined('WC_CC_ADVANCED') && WC_CC_ADVANCED) {
+				$this->form_fields += array(
+				'iframe_heading' => array(
+					'title' => _( 'Advanced Tokenization Settings', 'woocommerce' ),
+					'type' => 'title',
+				),
+				'use_iframe'    => array(
+					'title'       => __( 'Enable IFRAME API', 'woocommerce' ),
+					'label'       => __( 'Active', 'woocommerce' ),
+					'type'        => 'checkbox',
+					'description' => __( 'Use CardConnect API for retrieving customer credit card number tokens. If disabled, fallback to tokenizing directly with CardSecure API.', 'woocommerce' ),
+					'default'     => 'yes',
+				),
+				'iframe_autostyle' => array(
+					'class'       => 'iframe-config',
+					'title'       => __( ' Autostyle', 'woocommerce' ),
+					'label'       => __( 'Enable', 'woocommerce' ),
+					'type'        => 'checkbox',
+					'description' => __( 'Attempt to automatically style credit card input to match other fields.', 'woocommerce' ),
+					'default'     => 'yes',
+				),
+				'iframe_formatinput' => array(
+					'class'       => 'iframe-config',
+					'title'       => __( 'Format CC string', 'woocommerce' ),
+					'label'       => __( 'Enable', 'woocommerce' ),
+					'type'        => 'checkbox',
+					'description' => __( 'Add spaces to credit card input to make it more readable.', 'woocommerce' ),
+					'default'     => 'yes',
+				),
+				'iframe_tokenizewheninactive' => array(
+					'class'       => 'iframe-config',
+					'title'       => __( 'Process when inactive', 'woocommerce' ),
+					'label'       => __( 'Enable', 'woocommerce' ),
+					'type'        => 'checkbox',
+					'description' => __( 'If issues are reported making payments on mobile, this option may improve user experience.', 'woocommerce' ),
+					'default'     => 'yes',
+				),
+				'iframe_inactivityto' => array(
+					'class'       => 'iframe-config',
+					'title'       => __( 'Timeout', 'woocommerce' ),
+					'label'       => __( 'Enable', 'woocommerce' ),
+					'type'        => 'number',
+					'description' => __( 'Controls how long the page will wait after an input event before considering input complete.', 'woocommerce' ),
+					'default'     => 500,
+				));
+			}
 		}
 
 
@@ -423,6 +480,14 @@
                         } else {
                             sandbox.hide();
                             production.show();
+                        }
+                    }).change();
+                    jQuery('#woocommerce_card_connect_use_iframe').on('change', function () {
+                        var iframeConfig = jQuery('.iframe-config').closest('tr');
+                        if (jQuery(this).is(':checked')) {
+                            iframeConfig.show();
+                        } else {
+                            iframeConfig.hide();
                         }
                     }).change();
                     jQuery(function ($) {
@@ -564,6 +629,16 @@
 		public function handleAuthorizationResponse_NoResponse( $order, $showNotices = false ) {
 			$order->add_order_note( sprintf( __( 'CardConnect failed transaction. Response: %s', 'woocommerce' ), 'CURL error?' ) );
 
+			global $cardconnect_raven;
+			if ($cardconnect_raven) {
+				$cardconnect_raven->captureMessage('No response from CardConnect', array(), array(
+					'extra' =>  array(
+						'site' => site_url(),
+						'mid' => $this->api_credentials['mid'],
+					)
+				));
+			}
+
 			if ( $showNotices ) {
 				wc_add_notice( __( 'Payment error: ', 'woothemes' ) . 'A critical server error prevented this transaction from completing. Please confirm your information and try again.', 'error' );
 			}
@@ -577,6 +652,19 @@
 
 
 		public function handleAuthorizationResponse_Declined( $order, $response, $showNotices = false ) {
+
+			global $cardconnect_raven;
+			if ($cardconnect_raven) {
+				$cardconnect_raven->captureMessage('CardConnect declined transaction', array(), array(
+					'extra' =>  array(
+						'site' => site_url(),
+						'mid' => $this->api_credentials['mid'],
+						'order' => $order,
+						'response' => $response,
+					)
+				));
+			}
+
 			$order->add_order_note( sprintf( __( 'CardConnect declined transaction. Response: %s', 'woocommerce' ), $response['resptext'] ) );
 			$order->update_status( 'failed', __( 'Payment Declined - ', 'cardconnect-payment-gateway' ) );
 
@@ -607,6 +695,18 @@
 
 
 		public function handleAuthorizationResponse_DefaultError( $order, $showNotices = false ) {
+
+			global $cardconnect_raven;
+			if ($cardconnect_raven) {
+				$cardconnect_raven->captureMessage('CardConnect default error', array(), array(
+					'extra' =>  array(
+						'site' => site_url(),
+						'mid' => $this->api_credentials['mid'],
+						'order' => $order,
+					)
+				));
+			}
+
 			$order->update_status( 'failed', __( 'Payment Failed - ', 'cardconnect-payment-gateway' ) );
 
 			return array(
@@ -837,7 +937,7 @@
 				'cvv2'       => $checkoutFormData['cvv2'],
 				'amount'     => $this->get_order_total_formatted( $order ),
 				'currency'   => $this->getCardConnectCurrencyCode( $order->get_currency() ),
-				'orderid'    => sprintf( __( '%s - Order #%s', 'woocommerce' ), esc_html( get_bloginfo( 'name', 'display' ) ), $order->get_order_number() ),
+				'orderid'    => $order->get_order_number(),
 				'name'       => $checkoutFormData['card_name'] ? $checkoutFormData['card_name'] : trim( $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() ),
 				'address'    => $order->get_billing_address_1(),
 				'city'       => $order->get_billing_city(),
@@ -954,11 +1054,22 @@
 
 			if ( !is_null( $this->get_cc_client() ) ) {
 
+				try {
+					$payment_response = $this->get_cc_client()->authorizeTransaction( $request );
+				} catch (Exception $exception) {
+					global $cardconnect_raven;
+					if ($cardconnect_raven) {
+						$cardconnect_raven->captureException($exception, array(
+							'extra' => array(
+								'site' => site_url(),
+								'mid' => $this->api_credentials['mid'],
+							)
+						));
+					}
+				}
 
-				$payment_response = $this->get_cc_client()->authorizeTransaction( $request );
 
-
-			} else {
+		} else {
 
 				return $this->handleNoCardConnectConnection( $order, true );
 
@@ -1130,9 +1241,14 @@
 			wp_localize_script( 'woocommerce-cardconnect', 'wooCardConnect', array(
 				'isLive'          => !$isSandbox ? true : false,
 				'profilesEnabled' => $this->profiles_enabled ? true : false,
-				'apiEndpoint'     => "https://{$this->site}.{$this->domain}:{$port}{$this->cs_path}",
+				'apiEndpoint'     => array(
+					'basePath'        => "https://{$this->site}.{$this->domain}:{$port}",
+					'cs'              => $this->cs_path,
+					'itoke'           => $this->itoke_path,
+				),
 				'allowedCards'    => $this->card_types,
 				'userSignedIn'    => is_user_logged_in(),
+				'iframeOptions' => $this->iframe_options,
 			) );
 
 			$card_icons = array_reduce( $this->card_types, function ( $carry, $card_name ) {
@@ -1142,9 +1258,36 @@
 				return $carry;
 			}, '' );
 
+			$iframe_src = "https://{$this->site}.{$this->domain}:{$port}{$this->itoke_path}?";
+
+			// Querystring params: https://developer.cardconnect.com/hosted-iframe-tokenizer#optional-parameters
+
+			// Sets some default params to:
+			// invalidinputevent - CardConnect posts error message message if an invalid/incomplete number entered
+			// enhancedresponse - CardConnect posts verbose messages, specifically error codes and error messages
+
+			// Enable below to instruct iframe to return detailed data rather than just the token
+			// $iframe_src .= '?invalidinputevent=true&enhancedresponse=true';
+
+			// Styles the card number to be separated every four numbers
+			if ($this->iframe_options['formatinput']) {
+				$iframe_src .= '&formatinput=true';
+			}
+
+			// Validation & tokenization for manual input is normally performed when an onBlur event occurs on the
+			// input field (e.g. when the user clicks/tabs to the next field in the form). If 'tokenizewheninactive'
+			// is set to true, validation & tokenization will be performed once the input field stops receiving input
+			// from the user.
+			if ($this->iframe_options['tokenizewheninactive']) {
+				$iframe_src .= '&tokenizewheninactive=true';
+				$iframe_src .= '&inactivityto=' . $this->iframe_options['inactivityto'];
+			}
+
 			$template_params = array(
 				'card_icons'       => $card_icons,
 				'is_sandbox'       => $isSandbox,
+				'is_iframe'        => $this->iframe_options['enabled'],
+				'iframe_src'       => $iframe_src,
 				'profiles_enabled' => $this->profiles_enabled,
 				'description'      => $this->description,
 			);
@@ -1207,7 +1350,7 @@
 		 * Register Frontend Assets
 		 **/
 		public function register_scripts() {
-			wp_register_script( 'woocommerce-cardconnect', WC_CARDCONNECT_PLUGIN_URL . '/javascript/dist/woocommerce-cc-gateway.js', array('jquery'), WC_CARDCONNECT_VER, true );
+			wp_register_script( 'woocommerce-cardconnect', WC_CARDCONNECT_PLUGIN_URL . '/javascript/dist/cardconnect.js', array('jquery'), WC_CARDCONNECT_VER, true );
 			wp_register_style( 'woocommerce-cardconnect-paymentform', WC_CARDCONNECT_PLUGIN_URL . '/stylesheets/woocommerce-cc-gateway.css', NULL, WC_CARDCONNECT_VER );
 		}
 

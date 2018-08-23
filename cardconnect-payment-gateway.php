@@ -3,14 +3,14 @@
  * Plugin Name: CardConnect Payment Gateway
  * Plugin URI: https://wordpress.org/plugins/cardconnect-payment-module
  * Description: Accept credit card payments in your WooCommerce store!
- * Version: 2.0.17
+ * Version: 2.1.0-beta-3
  * Author: CardConnect <jle@cardconnect.com>
  * Author URI: https://cardconnect.com
  * License: GNU General Public License v2
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  *
  * WC requires at least: 3.0
- * WC tested up to: 3.4.2
+ * WC tested up to: 3.4.4
  *
  * @version 2.0.17
  * @author CardConnect
@@ -24,7 +24,7 @@ if(!defined('ABSPATH')){
 	exit; // Exit if accessed directly
 }
 
-define('WC_CARDCONNECT_VER', '2.0.17');
+define('WC_CARDCONNECT_VER', '2.1.0-beta-3');
 define('WC_CARDCONNECT_PLUGIN_PATH', untrailingslashit(plugin_basename(__DIR__)));
 define('WC_CARDCONNECT_TEMPLATE_PATH', untrailingslashit(plugin_dir_path(__FILE__)) . '/templates/');
 define('WC_CARDCONNECT_PLUGIN_URL', untrailingslashit(plugins_url('', __FILE__)));
@@ -46,8 +46,21 @@ function CardConnectPaymentGateway_init(){
 		return;
 	}
 
-	// Include Classes
-	include_once 'classes/class-wc-gateway-cardconnect.php';
+	// Include Composer dependencies
+    include_once 'vendor/autoload.php';
+    global $cardconnect_raven;
+    try {
+        // Raven is Sentry.io's Logging and Tracing utility
+        // We don't want to capture all server errors, so will just use an action hook to pass exceptions to it.
+        Raven_Autoloader::register();
+        $cardconnect_raven = new Raven_Client('https://441f18f1f5c84f0ea52c5142fa154bb8@sentry.io/1246888');
+    } catch (Exception $exception) {
+        // Failed to register logging utility
+        $cardconnect_raven = false;
+    }
+
+    // Include Classes
+    include_once 'classes/class-wc-gateway-cardconnect.php';
 	include_once 'classes/class-wc-gateway-cardconnect-saved-cards.php';
 
 	// Include Class for WooCommerce Subscriptions extension

@@ -1,0 +1,11 @@
+{
+  "files": [
+    "javascript/src/**/*.ts"
+  ],
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "noImplicitAny": false,
+    "target": "es5",
+    "sourceMap": true
+  }
+}

@@ -1,0 +1,22 @@
+sudo: required
+language: node_js
+node_js:
+  - 10
+
+addons:
+  chrome: stable
+
+services:
+  - docker
+
+cache:
+  directories:
+  - node_modules
+  - ~/.npm
+  - ~/.cache
+
+script:
+  - docker-compose up -d
+  - npm run build
+  - sleep 10
+  - cypress run --record --key $CYPRESS_KEY

@@ -107,7 +107,7 @@ export default class SavedCards {
 			}
 		}
 
-		function setTooltips(isEnabled){
+		function setTooltips(isEnabled : Boolean){
 			//console.log('setTooltips(isEnabled= ' + isEnabled + ' )');
 
 			// isEnabled corresponds to whether 'create an account' is checked or not.

@@ -1,26 +1,45 @@
 {
   "name": "woocommerce-cardconnect-payment-gateway",
-  "version": "0.5.0",
+  "version": "2.1.0-beta-3",
   "description": "Accept credit card payments in your WooCommerce store!",
   "main": "index.js",
+  "engines": {
+    "node": "10"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "gulp",
+    "postinstall": "npm run build",
+    "test": "cypress run",
+    "test:open": "cypress open",
+    "wp": "docker-compose run --rm wp-cli wp",
+    "init": "docker-compose run --rm wp-cli /bin/sh wp-content/plugins/woocommerce-cardconnect/scripts/init.sh",
+    "watch": "gulp js:watch"
   },
   "author": "Swingline0",
   "license": "GPL",
   "devDependencies": {
-    "browserify": "^9.0.7",
+    "browserify": "^16.2.2",
     "chai": "^2.2.0",
-    "gulp": "^3.8.11",
+    "computed-style": "^0.3.0",
+    "cypress": "^3.0.2",
+    "docker-compose": "^0.8.1",
+    "gulp": "^3.9.1",
+    "gulp-cli": "^2.0.1",
     "gulp-if": "^1.2.5",
-    "gulp-ignore": "^1.2.1",
     "gulp-notify": "^2.2.0",
-    "gulp-plumber": "^1.0.0",
-    "gulp-uglify": "^1.2.0",
+    "gulp-plumber": "^1.2.0",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-typescript": "^5.0.0-alpha.3",
+    "gulp-uglify": "^1.5.4",
     "mocha": "^2.2.1",
-    "tsify": "dpogue/tsify#ts1.5-alpha",
-    "typescript": "^1.5.0-alpha",
-    "vinyl-source-stream": "^1.1.0",
-    "watchify": "^3.1.0"
+    "tsify": "^4.0.0",
+    "typescript": "^2.9.2",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0",
+    "watchify": "^3.11.0"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "lodash": "^4.17.10"
   }
 }

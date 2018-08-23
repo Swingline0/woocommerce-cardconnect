@@ -1,146 +1,69 @@
-/// <reference path="./typings/tsd.d.ts"/>
-declare let jQuery : any;
-declare let wooCardConnect : any;
-declare let window : any;
-import CardConnectTokenizer from "./card-connect-tokenizer";
+import { map, isArray } from 'lodash';
+
+import { WoocommerceCardConnectSettings } from './interfaces';
+import initCardSecure from './checkout-card-secure';
+import initHostedIframe from './checkout-hosted-iframe';
 import SavedCards from './saved-cards';
 
-const SAVED_CARDS_SELECT = '#card_connect-cards';
+declare const wooCardConnect : WoocommerceCardConnectSettings;
 
-jQuery($ => {
-
-  let isLive : boolean = Boolean(wooCardConnect.isLive);
-  let cc = new CardConnectTokenizer($, wooCardConnect.apiEndpoint);
-  let $form = $('form.checkout, form#order_review');
-  let $errors;
-
-
-  // !! 'updated_checkout' is not fired for the 'payment method change' form aka 'form#order_review'
-  $('body').on('updated_checkout', function () {
-    //console.log("!!! caught updated_checkout");
-    if (wooCardConnect.profilesEnabled)
-      SavedCards.init();
-  });
-
-
-  //'updated_checkout' (above) was not fired for the 'payment method change' form aka 'form#order_review'
-  // so this was added.
-  $('form#order_review').ready( function() {
-    //console.log('ready');
-    if (wooCardConnect.profilesEnabled) {
-      SavedCards.init();
-    }
-  });
-
-
-  // Simulate some text entry to get jQuery Payment to reformat numbers
-  if(!isLive){
-    $('body').on('updated_checkout', ()=>{
-      getToken();
-    });
-  }
-
-  function getToken() : boolean {
-
-    // why is/was this here?
-    //if (checkAllowSubmit()) {
-    //    return false;
-    //}
-
-
-    let $ccInput = $form.find('#card_connect-card-number');
-    let creditCard = $ccInput.val();
-
-    if(creditCard.indexOf('\u2022') > -1) return;
-
-    $form.block({
-      message: null,
-      overlayCSS: {
-        background: '#fff',
-        opacity: 0.6
-      }
-    });
-    if(!creditCard){
-      printWooError('Please enter a credit card number');
-      return false;
-    }else if(!checkCardType(creditCard)){
-      printWooError('Credit card type not accepted');
-      return false;
-    }
-    cc.getToken(creditCard, function(token, error){
-      if(error){
-        printWooError(error);
-        return false;
-      }
-      // Append token as hidden input
-      $('<input />')
+jQuery(($: any) => {
+    const { apiEndpoint: { basePath, cs, itoke }, iframeOptions } = wooCardConnect;
+    const $form = $('form.checkout, form#order_review');
+    const $body = $('body');
+    let $errors : JQuery<HTMLElement>;
+    const $tokenInput = $('<input />')
         .attr('name', 'card_connect_token')
         .attr('type', 'hidden')
         .addClass('card-connect-token')
-        .val(token)
         .appendTo($form);
 
-      // Mask user entered CC number
-      $ccInput.val($.map(creditCard.split(''), (char, index) => {
-        if(creditCard.length - (index + 1) > 4 ){
-          return char !== ' ' ? '\u2022' : ' ';
-        }else{
-          return char;
-        }
-      }).join(''));
-
-    });
-    $form.unblock();
-    return true;
-  }
-
-  function checkAllowSubmit() : boolean {
-    // if we have a token OR a 'saved card' is selected, return FALSE
-    return 0 !== $('input.card-connect-token', $form).size() || $(SAVED_CARDS_SELECT).val();
-  }
-
-  function checkCardType(cardNumber : string) : boolean {
-    let cardType = $.payment.cardType(cardNumber);
-    for(let i = 0; i < wooCardConnect.allowedCards.length; i++) {
-      if(wooCardConnect.allowedCards[i] === cardType) return true;
-    }
-    return false;
-  }
-
-  function printWooError(error : string | string[]) : void {
-
-    if(!$errors) $errors = $('.js-card-connect-errors', $form);
-
-    let errorText : string | string[]; // This should only be a string, TS doesn't like the reduce output though
-    if(error.constructor === Array){
-      errorText = Array(error).reduce((prev, curr) => prev += `<li>${curr}</li>`);
-    }else{
-      errorText = `<li>${error}</li>`;
+    if (wooCardConnect.profilesEnabled) {
+        $body.on('updated_checkout', SavedCards.init);
+        $form.on('ready', SavedCards.init);
     }
 
-    $errors.html(`<ul class="woocommerce-error">${errorText}</ul>`);
-    $form.unblock();
-  }
+    /**
+     * Success callback used for both CardSecure and Hosted iFrame integrations
+     *
+     * The function simply appends a hidden input to the checkout form and sets
+     * the value based on what is passed to it.
+     * @param {string} token
+     */
+    function onTokenSuccess(token : string) : void {
+        $tokenInput.val(token);
+    }
 
-  // Get token when focus of CC field is lost
-  $form.on('blur', '#card_connect-card-number', () => {
-    if($errors) $errors.html('');
-    return getToken();
-  });
+    /**
+     * Display errors on the checkout form
+     *
+     * Wraps a one or many errors in <li>'s and displays them on the form
+     * @param {string | string[]} error
+     * @param {boolean} clearToken - reset token on error push
+     */
+    function onError(error : string | string[], clearToken : boolean) : void {
+        if (!$errors) $errors = $('.js-card-connect-errors', $form);
 
-  // Bind Submit Listeners
-  $form.on('checkout_place_order_card_connect', () => checkAllowSubmit());
-  $('form#order_review').on('submit', () => checkAllowSubmit());
+        // Map an array of strings into individual <li>'s, or wrap a single error in <li> tags
+        const errorText : string = isArray(error)
+            ? map(error, curr => `<li>${curr}</li>`).join('')
+            : `<li>${error}</li>`;
 
-  // Remove token on checkout err
-  $('document.body').on('checkout_error', () => {
-    if($errors) $errors.html('');
-    $('.card-connect-token').remove();
-  });
+        $errors.html(`<ul class="woocommerce-error">${errorText}</ul>`);
 
-  // Clear token if form is changed
-  $form.on('keyup change', `#card_connect-card-number, ${SAVED_CARDS_SELECT}`, () => {
-    $('.card-connect-token').remove();
-  });
+        $([document.documentElement, document.body]).animate({
+            scrollTop: $('.payment_method_card_connect').offset().top
+        }, 500);
 
+        // Clear any existing value from the hidden token input
+        if ($tokenInput && clearToken) $tokenInput.val('');
+        $form.unblock();
+    }
+
+    // Initialize logic to marshall the rest of the checkout process
+    if (iframeOptions.enabled) {
+        initHostedIframe($, `${basePath}${itoke}`, onTokenSuccess, onError)
+    } else {
+        initCardSecure($, `${basePath}${cs}`, onTokenSuccess, onError);
+    }
 });
