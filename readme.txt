@@ -2,16 +2,18 @@
 Contributors: jle1, RexAK
 Tags: woocommerce, payment, gateway, cardconnect
 Requires at least: 4.4
-Tested up to: 4.9.6
-Stable tag: 2.0.17
+Tested up to: 4.9.8
+Stable tag: 3.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-WC requires at least: 3.0
+WC requires at least: 3.2
 WC tested up to: 3.4.2
 WC Pre-Orders tested with v1.5.9
 WC Subscriptions tested with v2.2.20
 
 == Description ==
+
+Note: WooCommerce CardConnect Payment Gateway version 3.0+ is a major update. It is recommended that you test this version for compatibility before updating. 3.0+ introduces CardPoint's API iframe tokenization methods.
 
 The WooCommerce CardConnect Payment Gateway allows you to accept Visa, MasterCard, American Express and Discover payments in your WordPress WooCommerce store. CardConnect payment processing tokenizes sensitive data, safeguarding your customers from a data breach and removing the burden of PCI compliance.
 
@@ -19,10 +21,12 @@ CardConnect allows customers to checkout with a saved card.  Card details are sa
 
 Visit [CardConnect](http://cardconnect.com) for more information.
 
-Please note that WooCommerce (v3.0+) must be installed and active.
-The latest version of WooCommerce (v3.4.2) is supported.
 
+Please note that WooCommerce (v3.2+) must be installed and active.
+The latest version of WooCommerce (v3.4.2) is supported.
 The WooCommerce Subscriptions extension (v2.2.x) is fully supported.
+
+You must contact your Card Connect representative to receive the account credentials specifically for this plugin to work. Those credentials are different than what is provided for the Virtual Terminal. You must also contact your hosting provider and request that they open ports 6443 and 8443 for traffic. Refer to the CardConnect [WooCommerce information page](https://support.cardconnect.com/cardpointe/marketplace/woocommerce) for more details.
 
 
 == Installation ==
@@ -30,7 +34,7 @@ The WooCommerce Subscriptions extension (v2.2.x) is fully supported.
 * Upload plugin files to your plugins folder, or install using WordPress built-in Add New Plugin installer;
 * Activate the plugin;
 * Configure the plugin settings in WooCommerce > Settings > Checkout > Card Connect
-* Contact your CardConnect representative for your merchant ID and credentials
+* Contact your CardConnect representative for your merchant ID and credentials, and to activate your account for WooCommerce usage.
 
 == Frequently Asked Questions ==
 
@@ -62,7 +66,32 @@ Yes.
 
 We support all WooCommerce currencies except the Ukranian Hryvnia.
 
+= Can I switch back to the 2.x method of tokenization, and not use the 3.x+ iframe methods =
+
+Yes. Define WC_CC_ADVANCED as true in your wp-config.php file. Then, open the plugin's WooCommerce setting page, and configure the new options. Use at your own risk.
+
+= Who do I contact for support? =
+
+Support is provided by CardConnect. Before posting to this plugin forum, contact your CardConnect rep.
+
+= I have trouble with a saved card =
+
+Cards save while in test/sandbox mode will NOT carry over when switching to live mode. If you've saved a card in this manner, and receive an error, you need to resave the card in live mode, under a different label/name.
+
 == Changelog ==
+= 3.0.2 =
+* repackage, restore raven
+
+= 3.0.1 =
+* removes Fatal error reported when upgrading
+
+= 3.0.0 =
+* Change: Now tokenizes card numbers via CardPoint's iframe methods
+* Change: added method to attempt to pull WooCommerce checkout styles, and apply them to the check out card detail fields
+* Fix: normalizes the refund total to prevent some isolated cases where refund amounts were multiplied by 100
+* Fix: Various tokenization checks for both the new iframe version and older JS tokenization calls
+* Fix: Tokenization carries over from previous versions, into this version. Subscriptions and Saved cards are persistent.
+
 = 2.0.17 =
 * Change: Updated to use new CardConnect SSL certificate
 
@@ -98,6 +127,8 @@ We support all WooCommerce currencies except the Ukranian Hryvnia.
 = 2.0.7 =
 * Fix: Added backwards compatibility with previous version of WooCommerce v2.5.5
 
+
+
 = 2.0.6 =
 * Updated plugin author info.
 
@@ -109,6 +140,8 @@ We support all WooCommerce currencies except the Ukranian Hryvnia.
 
 = 2.0.3 =
 * Minor CardConnect API update
+
+
 
 = 2.0.2 =
 * Fix: Fixed detection of whether the Pre-Orders extension is installed or not.
@@ -170,6 +203,10 @@ in the section titled 'Warnings/Messages'.  Refresh this page to re-perform the 
 and auth only/capture transactions.
 
 == Upgrade Notice ==
+= 3.0.0 =
+CardConnect Payment Module 3.0.0 is a major release. Please insure compatibility before updating. See the changelog
+for update info.
+
 = 2.0.0 =
 Major release to fully support the WooCommerce Subscriptions 2.x extension plugin for the WooCommerce store.
 
@@ -178,3 +215,4 @@ Upgrade for bug fixes
 
 = 1.0.0 =
 Initial repository version
+
