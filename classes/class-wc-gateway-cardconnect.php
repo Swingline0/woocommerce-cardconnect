@@ -1316,9 +1316,11 @@
 			$order = $order = wc_get_order( $order_id );
 			$retref = get_post_meta( $order_id, '_transaction_id', true );
 
+			$amount = number_format($amount, '2', '.', '');
+
 			$request = array(
 				'merchid'    => $this->api_credentials['mid'],
-				'amount'     => $amount * 100,
+				'amount'     => $amount,
 				'currency'   => $this->getCardConnectCurrencyCode( $order->get_currency() ),
 				'retref'     => $retref,
 				'frontendid' => $this->front_end_id,
