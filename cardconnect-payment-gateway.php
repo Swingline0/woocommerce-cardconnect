@@ -53,7 +53,9 @@ function CardConnectPaymentGateway_init(){
         // Raven is Sentry.io's Logging and Tracing utility
         // We don't want to capture all server errors, so will just use an action hook to pass exceptions to it.
         Raven_Autoloader::register();
-        $cardconnect_raven = new Raven_Client('https://441f18f1f5c84f0ea52c5142fa154bb8@sentry.io/1246888');
+        $cardconnect_raven = new Raven_Client('https://441f18f1f5c84f0ea52c5142fa154bb8@sentry.io/1246888', array(
+            'release' => WC_CARDCONNECT_VER,
+        ));
     } catch (Exception $exception) {
         // Failed to register logging utility
         $cardconnect_raven = false;
