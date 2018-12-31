@@ -5,7 +5,7 @@
 	<p style="margin: 0 0 5px;">Accepting:</p>
 	<ul class="card-connect-allowed-cards"><?php echo $card_icons; ?></ul>
 	</p>
-	<?php if($profiles_enabled){
+	<?php if ($profiles_enabled) {
 		wc_get_template(
 			'saved-cards.php',
 			array(
@@ -17,7 +17,7 @@
 	} ?>
 	<p class="form-row form-row-wide">
 		<label for="card_connect-card-name">
-		<?php echo __( 'Cardholder Name (If Different)', 'woocommerce' ); ?>
+			<?php echo __('Cardholder Name (If Different)', 'woocommerce'); ?>
 		</label>
 		<input
 			id="card_connect-card-name"
@@ -29,7 +29,7 @@
 	</p>
 	<p class="form-row form-row-wide validate-required">
 		<label for="card_connect-card-number">
-		<?php echo __( 'Card Number', 'woocommerce' ); ?>
+			<?php echo __('Card Number', 'woocommerce'); ?>
 			<span class="required">*</span>
 		</label>
 		<?php if ($is_iframe): ?>
@@ -54,7 +54,7 @@
 	</p>
 	<p class="form-row form-row-first validate-required">
 		<label for="card_connect-card-expiry">
-		<?php echo __( 'Expiry (MM/YY)', 'woocommerce' ); ?>
+			<?php echo __('Expiry (MM/YY)', 'woocommerce'); ?>
 			<span class="required">*</span>
 		</label>
 		<input
@@ -62,13 +62,13 @@
 			class="input-text wc-credit-card-form-card-expiry"
 			type="text"
 			autocomplete="off"
-			placeholder="<?php echo __( 'MM / YY', 'woocommerce' ); ?>"
+			placeholder="<?php echo __('MM / YY', 'woocommerce'); ?>"
 			name="card_connect-card-expiry"
 		/>
 	</p>
 	<p class="form-row form-row-last validate-required">
 		<label for="card_connect-card-cvc">
-		<?php echo __( 'Card Code', 'woocommerce' ); ?>
+			<?php echo __('Card Code', 'woocommerce'); ?>
 			<span class="required">*</span>
 		</label>
 		<input
@@ -76,9 +76,9 @@
 			class="input-text wc-credit-card-form-card-cvc"
 			type="text"
 			autocomplete="off"
-			placeholder="<?php echo __( 'CVC', 'woocommerce' ); ?>"
+			placeholder="<?php echo __('CVC', 'woocommerce'); ?>"
 			name="card_connect-card-cvc"
 		/>
-		<em><?php echo __( 'Your CVV number will not be stored on our server.', 'woocommerce' ); ?></em>
+		<em><?php echo __('Your CVV number will not be stored on our server.', 'woocommerce'); ?></em>
 	</p>
 </fieldset>
