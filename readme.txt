@@ -3,7 +3,7 @@ Contributors: jle1, RexAK
 Tags: woocommerce, payment, gateway, cardconnect
 Requires at least: 4.4
 Tested up to: 4.9.8
-Stable tag: 3.0.2
+Stable tag: 3.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 WC requires at least: 3.2
@@ -79,6 +79,12 @@ Support is provided by CardConnect. Before posting to this plugin forum, contact
 Cards save while in test/sandbox mode will NOT carry over when switching to live mode. If you've saved a card in this manner, and receive an error, you need to resave the card in live mode, under a different label/name.
 
 == Changelog ==
+= 3.0.4 =
+* Change: Remove development functions
+
+= 3.0.3 =
+* Force update - for those on < 3.0.3
+
 = 3.0.2 =
 * repackage, restore raven
 

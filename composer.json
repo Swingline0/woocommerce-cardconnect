@@ -3,7 +3,6 @@
   "description": "Cardconnect payment gateway integration with woocommerce",
   "type": "project",
   "require": {
-    "sentry/sentry": "^1.9"
   },
   "license": "GPL",
   "authors": [
