@@ -4,7 +4,7 @@
   "description": "Accept credit card payments in your WooCommerce store!",
   "main": "index.js",
   "engines": {
-    "node": "10"
+    "node": "8"
   },
   "scripts": {
     "build": "gulp",
