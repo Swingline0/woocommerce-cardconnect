@@ -37,7 +37,7 @@
 				width="100%"
 				style="margin-bottom: 0;"
 				id="card_connect-iframe"
-				src="<?php echo $iframe_src; ?>"
+				src="<?php echo $is_autostyle ? $iframe_src : sprintf('%s&css=%s', $iframe_src, $iframe_style); ?>"
 				frameborder="0"
 				scrolling="no"
 			></iframe>

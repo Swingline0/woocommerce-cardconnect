@@ -125,6 +125,7 @@ public $front_end_id = "13";
 			'formatinput' => $this->get_option('iframe_formatinput') ? $this->get_option('iframe_formatinput') === 'yes' : true,
 			'tokenizewheninactive' => $this->get_option('iframe_tokenizewheninactive') ? $this->get_option('iframe_tokenizewheninactive') === 'yes' : true,
 			'inactivityto' => $this->get_option('iframe_inactivityto') ? $this->get_option('iframe_inactivityto') : 500,
+			'style' => $this->get_option('iframe_style') ? $this->get_option('iframe_style') : '',
 		);
 
 		$this->verification = array(
@@ -305,6 +306,14 @@ public $front_end_id = "13";
 					'type' => 'checkbox',
 					'description' => __('Attempt to automatically style credit card input to match other fields.', 'woocommerce'),
 					'default' => 'yes',
+				),
+				'iframe_style' => array(
+					'class' => 'iframe-config',
+					'title' => __('Custom Style', 'woocommerce'),
+					'label' => __('Enable', 'woocommerce'),
+					'type' => 'textarea',
+					'description' => __('Define the CSS rules to be passed into the CardConnect iframe. NOTE: This will only be used if Autostyle (above) is disabled.', 'woocommerce'),
+					'default' => '',
 				),
 				'iframe_formatinput' => array(
 					'class' => 'iframe-config',
@@ -1271,6 +1280,8 @@ public $front_end_id = "13";
 			'card_icons' => $card_icons,
 			'is_sandbox' => $isSandbox,
 			'is_iframe' => $this->iframe_options['enabled'],
+			'is_autostyle' => $this->iframe_options['autostyle'],
+			'iframe_style' => $this->iframe_options['style'],
 			'iframe_src' => $iframe_src,
 			'profiles_enabled' => $this->profiles_enabled,
 			'description' => $this->description,
