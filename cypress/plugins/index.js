@@ -7,7 +7,7 @@ module.exports = (on, config) => {
       const cmdString = reduce(args, (carry, argValue, argKey) => {
         carry += ` --${argKey}=${argValue}`;
         return carry;
-      }, `wp ${command}`);
+      }, `wp --allow-root ${command}`);
       console.log(cmdString);
       return compose.run('wp-cli', cmdString, { cwd: process.cwd() })
         .then(({ err, out }) => {
