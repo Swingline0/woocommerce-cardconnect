@@ -20,3 +20,18 @@ script:
   - npm run build
   - sleep 10
   - cypress run --record --key $CYPRESS_KEY
+
+before_deploy:
+  - ./scripts/build.sh
+  - mv build cardconnect-payment-module
+  - tar -zvcf cardconnect-payment-module-${TRAVIS_TAG}-${TRAVIS_BUILD_NUMBER}.tar.gz cardconnect-payment-module
+
+deploy:
+  provider: releases
+  api_key:
+    secure: iqs3rjNlZWz99pSnne7F5W9+8pjca+5cRJ79eSoDP0A30nDqDi0mzSnOFEy/3C9bf2Te/LO2S3Wt5092oXvTd1JgOYM+QUlHvd3bAhDN/g7u0XqOoQMpARGDfgu/l02rGou08s6lYg31K/1w/bNbXiwde7979aIIE1IPCdCN8fsvfBkfcaGYltQ42sS66mxe2EZ1dKY6G2Hv6GXcPyCvq4zVR2NOnFLMNbm1whx16mMKr/9jnKmceoY/Pize1qxDZZBY9K6P9kGfPRMGFIi6R2jVRDTZpqxWELcvUMdzkJbdJtOv9Dm2qhc7OQna4jAbOPE/UJ5NJKoLoGRzJJuVFNP13z5qYhKQzRnkHFZrkzJSQy6wrhtSYy/MXXNAzYOyVAALPTFSzVHU+rtT3GJ2+VWz6gcvwdt2lEtLyM1Sw9BJnZbjkryKVazcDjU1SANBKFds3lvRRxOw4F/WJz0sdYy0XKLl/pxkEr1g4eUui8ATPhQw1yMPHTk/mTwLfDlhUKAJttzZUCdSFWYAiOihzVxPGm9hSdxv0yMegJcy3zjG7fCNI6gfSrSvYKqnkfctdNaNsmQeBBDVDK/FKJ9YyBjabk5RjFt5bja95Ankex2aSehvTDjXfrOMVywD01kdQ7sOIczaH6gB9hmFuBFEknH2j5o5x901XC5akZ7nmFY=
+  file: cardconnect-payment-module-${TRAVIS_TAG}-${TRAVIS_BUILD_NUMBER}.tar.gz
+  skip_cleanup: true
+  on:
+    tags: true
+    repo: Swingline0/woocommerce-cardconnect
