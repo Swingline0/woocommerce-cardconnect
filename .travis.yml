@@ -20,7 +20,7 @@ cache:
 script:
   - docker-compose up -d
   - npm run build
-  - sleep 10
+  - sleep 25
   - cypress run --record --key $CYPRESS_KEY
 
 before_deploy:
