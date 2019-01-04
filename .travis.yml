@@ -29,6 +29,7 @@ before_install:
 
 script:
   - docker-compose up -d
+  - while [ $? -ne 0 ]; do !!; done # Keep re-running the above until it works
   - npm run build
   - sleep 25
   - cypress run --record --key $CYPRESS_KEY
