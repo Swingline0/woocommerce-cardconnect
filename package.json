@@ -11,7 +11,7 @@
     "postinstall": "npm run build",
     "test": "cypress run",
     "test:open": "cypress open",
-    "wp": "docker-compose run --rm wp-cli wp",
+    "wp": "docker-compose run --rm wp-cli wp --allow-root",
     "init": "docker-compose run --rm wp-cli /bin/sh wp-content/plugins/woocommerce-cardconnect/scripts/init.sh",
     "watch": "gulp js:watch"
   },
