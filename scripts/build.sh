@@ -18,7 +18,7 @@ cp -R templates build
 cp -R vendor build
 cp -R cardconnect-payment-gateway.php build
 cp -R composer.json build
-cp -R composer.lock build
+#cp -R composer.lock build # Removed as there are no longer currently any composer dependencies
 cp -R index.php build
 cp -R LICENSE build
 cp -R readme.txt build
