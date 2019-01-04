@@ -2,10 +2,12 @@
 
 set -e
 
-rm -rf build || true
+if [[ -z "$CI" ]]; then
+	npm ci
+	docker-compose run composer install
+fi
 
-npm ci
-docker-compose run composer install
+rm -rf build || true
 mkdir build
 
 cp -R assets build
