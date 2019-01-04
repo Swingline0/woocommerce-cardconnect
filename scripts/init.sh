@@ -44,6 +44,7 @@ wp option update woocommerce_card_connect_settings --allow-root --format=json '{
     "enable_profiles":"no",
     "use_iframe":"yes",
     "iframe_formatinput":"no",
+    "iframe_style":"body {margin: 0;}\ninput {width: 300px;}\n.error {border: 1px solid red;}",
     "void_avs":"yes",
     "void_cvv":"yes"
 }'

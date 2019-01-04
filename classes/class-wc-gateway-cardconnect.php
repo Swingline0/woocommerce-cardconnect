@@ -125,7 +125,7 @@ public $front_end_id = "13";
 			'formatinput' => $this->get_option('iframe_formatinput') ? $this->get_option('iframe_formatinput') === 'yes' : true,
 			'tokenizewheninactive' => $this->get_option('iframe_tokenizewheninactive') ? $this->get_option('iframe_tokenizewheninactive') === 'yes' : true,
 			'inactivityto' => $this->get_option('iframe_inactivityto') ? $this->get_option('iframe_inactivityto') : 500,
-			'style' => $this->get_option('iframe_style') ? $this->get_option('iframe_style') : '',
+			'style' => $this->get_option('iframe_style') ? $this->get_option('iframe_style') : 'body {margin: 0;} input {width: 300px;} .error {border: 1px solid red;}',
 		);
 
 		$this->verification = array(
@@ -313,7 +313,7 @@ public $front_end_id = "13";
 					'label' => __('Enable', 'woocommerce'),
 					'type' => 'textarea',
 					'description' => __('Define the CSS rules to be passed into the CardConnect iframe. NOTE: This will only be used if Autostyle (above) is disabled.', 'woocommerce'),
-					'default' => '',
+					'default' => 'body {margin: 0;} input {width: 300px;} .error {border: 1px solid red;}',
 				),
 				'iframe_formatinput' => array(
 					'class' => 'iframe-config',
